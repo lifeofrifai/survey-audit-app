@@ -12,11 +12,16 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
+import BASE_URL from "../../../../config";
+import toast, { Toaster } from 'react-hot-toast';
+import { getCsrfToken } from 'next-auth/react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const notify = () => toast.error('Email atau Password salah!');
+
+  
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -30,7 +35,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3030/api/loginpublic', {
+      const response = await axios.post(`${BASE_URL}/api/loginpublic`, {
         email,
         password,
       });
@@ -38,9 +43,14 @@ export default function Login() {
       if (response.data.code === 200) {
         localStorage.setItem('token', response.data.data.token);
         localStorage.setItem('user', response.data.data.role);
+        localStorage.setItem('email', response.data.data.email);
+        localStorage.setItem('name', response.data.data.name);
+        localStorage.setItem('nim', response.data.data.nim);
+        localStorage.setItem('id', response.data.data.id);
 
-        const role = response.data.data.role;
 
+        
+        const role = localStorage.getItem('user');
         if (role === 'ADMIN') {
           window.location.href = '/dashboard';
         } else {
@@ -48,6 +58,7 @@ export default function Login() {
         }
       } else {
         console.log('Login failed');
+        notify();
       }
     } catch (error) {
       console.error("Login failed:", error);
@@ -55,8 +66,20 @@ export default function Login() {
     }
   };
 
+  
+
   return (
     <main className="absolute inset-0 -z-10 w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] flex h-screen flex-col items-center justify-center md:p-24 px-5">
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+            duration: 3000,
+            style: {
+                background: '#3D9ADD',
+                color: '#fff',
+            },
+          }}
+      />
       <Card className="md:px-10 py-14 bg-gradient-to-t from-[#2C78AF] to-[#3D9ADD]">
         <form onSubmit={handleLogin}>
           <CardHeader>
@@ -88,7 +111,7 @@ export default function Login() {
             </div>
           </CardContent>
           <CardFooter className="justify-center mt-5 flex flex-col">
-            <Button type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] w-full">Sign In</Button>
+            <Button  type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] w-full">Sign In</Button>
             <p className="text-white text-sm mt-3">Belum punya akun? <a href="/signUp" className="hover:text-[#00B907] font-bold">Register</a></p>
           </CardFooter>
         </form>

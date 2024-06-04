@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState} from 'react';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import Avatar from '@mui/joy/Avatar';
@@ -10,19 +11,13 @@ import ListItemButton, { listItemButtonClasses } from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
-import TerminalIcon from '@mui/icons-material/Terminal';
-import QuestionAnswerRoundedIcon from '@mui/icons-material/QuestionAnswerRounded';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import SmsIcon from '@mui/icons-material/Sms';
-import Image from 'next/image';
-import HistoryIcon from '@mui/icons-material/History';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { Button } from "@/components/ui/button"
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 import { closeSidebar } from '@/components/utils';
+import { list } from 'postcss';
 
 function Toggler({
     defaultExpanded = false,
@@ -57,6 +52,37 @@ return (
 }
 
 export default function Sidebar() {
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const role = localStorage.getItem('user');
+            if (role === 'ADMIN') {
+                setIsAdmin(true);
+            }
+
+            const storedName = localStorage.getItem('name');
+            const storedEmail = localStorage.getItem('email');
+
+            if (storedName) setName(storedName);
+            if (storedEmail) setEmail(storedEmail);
+        }
+    }, []);
+
+
+
+
+    const handleLogout = () => {
+        try {
+            localStorage.clear();
+            window.location.href = '/';
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
 return (
     <Sheet
@@ -138,7 +164,8 @@ return (
             marginTop: 3,
         }}
         >
-        <ListItem >
+        {isAdmin === true && (
+            <ListItem >
             <ListItemButton
             role="menuitem"
             component="a"
@@ -151,8 +178,9 @@ return (
                 <Typography level="title-sm">Dashboard</Typography>
             </ListItemContent>
             </ListItemButton>
-        </ListItem>
-
+            </ListItem>
+        )}
+        
         <ListItem >
             <ListItemButton
             role="menuitem"
@@ -182,6 +210,7 @@ return (
             </ListItemContent>
             </ListItemButton>
         </ListItem>
+        
 
         </List>
 
@@ -195,13 +224,13 @@ return (
             {/* <Typography level="title-sm">{user.displayName}</Typography>
             <Typography level="title-sm">V</Typography> */}
             <div className='flex items-center'>
-                <p className="text-base font-medium  text-gray-900 -mt-1">lifeofrifai</p>
+                <p className="text-base font-medium  text-gray-900 -mt-1">{name}</p>
             </div>
-        <Typography level="body-xs">muhammadnurifai@gmail.com</Typography>
+        <Typography level="body-xs">{email}</Typography>
         {/* <Typography level="body-xs">{isAdmin}</Typography> */}
         </Box>
         <IconButton size="sm" variant="plain" color="neutral">
-        <LogoutRoundedIcon  />
+        <LogoutRoundedIcon onClick={handleLogout} />
         </IconButton>
     </Box>
 

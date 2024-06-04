@@ -1,12 +1,11 @@
 "use client"
-import { Head } from "next/document";
 import * as React from 'react';
-import { Inter } from 'next/font/google';
 import { CssVarsProvider, StyledEngineProvider } from '@mui/joy/styles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
+import { useEffect } from 'react';
 
 
 
@@ -15,6 +14,20 @@ export default function RootLayout({
 } :{
     children: React.ReactNode;
 }) {
+
+    const checkToken = () => {
+        const token = localStorage.getItem('token');
+        console.log(token);
+            if (!token) {
+                window.location.href = '/';
+            }
+    }
+
+    useEffect(() => {
+        checkToken();
+    }, []);
+    
+    
   return (
     <div>
       <StyledEngineProvider injectFirst>
