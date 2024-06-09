@@ -56,6 +56,7 @@ export default function RootLayout({
                     height: '100dvh',
                     gap: 1,
                     overflow: 'auto',
+                    background: '#F1F1F1'
                     }}
                 >
                     {children}

@@ -7,6 +7,11 @@ import BASE_URL from "../../../../../config";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Button } from "@/components/ui/button";
+import TextFormSurvey from "@/components/form/TextFormSurvey";
+import JenisKelaminChoise from "@/components/form/JenisKelaminChoise";
+import PuasChoise from "@/components/form/PuasChoise";
+import SetujuChoise from "@/components/form/SetujuChoise";
 
 
 export default function page() {
@@ -31,7 +36,6 @@ export default function page() {
             });
             if (response.data.code === 200) {
                 setData(response.data.data);
-                console.log(response.data.data);
             } else {
                 console.log('Gagal Mengambil data');
             }
@@ -72,57 +76,53 @@ export default function page() {
 
 
     return (
-        <div className="items-center justify-center flex-1 px-5 md:px-10 ">
-            <div className="mt-10">
-                {data ? (
-                    <h1 className="text-4xl font-bold text-center">{data.title}</h1>
-                    
-                ):(
-                    <h1 className="text-4xl font-bold text-center">Loading...</h1>
-                )}
-                
-            </div>
-            <div className=" mt-14 mx-10 p-10 rounded-lg">
-                {question.map((item) => (
-                    <div className="mb-5" key={item.id}>
-                        <p className="text-xl font-bold">{item.question}</p>
-                        <input type="text" className="w-full h-10 border border-gray-400 rounded-lg px-3 mt-2"/>
-                    </div>
-                ))}
-            </div>
-            <div className="w-2/3 mx-auto bg-slate-100  p-10 pb-12 rounded-lg mb-2">
-                <Label htmlFor="jawaban" className="text-md">Nama lengkap</Label>
-                <Input 
-                    className="mt-3"
-                    type="email" 
-                    id="jawaban" 
-                    placeholder="Jawaban Anda" 
-                    value={""} 
-                    required 
-                />
-            </div>  
-            <div className="w-2/3 mx-auto bg-slate-100  p-10 pb-12 rounded-lg ">
-                <Label htmlFor="" className="text-md">Jenis kelamin</Label>
-                <RadioGroup defaultValue="option-one" className="gap-4 mt-3">
-                    <div className="flex items-center space-x-3">
-                        <RadioGroupItem value="option-one" id="option-one" />
-                        <Label htmlFor="option-one">Option One</Label>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                        <RadioGroupItem value="option-two" id="option-two" />
-                        <Label htmlFor="option-two">Option Two</Label>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                        <RadioGroupItem value="option-three" id="option-three" />
-                        <Label htmlFor="option-three">Option Three</Label>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                        <RadioGroupItem value="option-four" id="option-four" />
-                        <Label htmlFor="option-four">Option Four</Label>
-                    </div>
-                </RadioGroup>
-
-            </div>  
+        <div className="items-center justify-center flex-1 px-5 md:px-10 py-5 md:py-10 ">
+            {data ? (
+                <div className=" md:w-2/3 mx-auto bg-white p-7 md:p-10  rounded-lg mb-3">
+                    <h1 className="text-3xl font-bold text-[#3D9ADD]">{data.title}</h1>
+                    <p className="text-gray-500 mt-1 text-sm md:text-base">Silahkan isi survey sampai dengan selesai dan pastikan anda mengisi dengan benar!!</p>
+                </div> 
+            ):(
+                <div className="md:w-2/3 mx-auto bg-white  p-7 md:p-10   rounded-lg mb-3">
+                    <h1 className="text-3xl font-bold text-[#3D9ADD]">Loading....</h1>
+                    <p className="text-gray-500 mt-1">............</p>
+                </div>
+            )}
+            {question.map((item) => (
+                <div key={item.id}>
+                    <TextFormSurvey
+                        question={item.question}
+                        id={item.id}                   
+                    />
+                    <JenisKelaminChoise
+                        id={item.id}
+                    />
+                    <SetujuChoise
+                        question={item.question}
+                        id={item.id}
+                    />
+                    <PuasChoise
+                        question={item.question}
+                        id={item.id}
+                    />
+                </div>
+            ))}
+            {/* <JenisKelaminChoise
+                id={10}
+            />
+            
+            <PuasChoise
+                question="Seberapa besar tingkat kepuasan Bapak/Ibu Tata pamong yang diterapkan di Universitas Syiah Kuala?"
+                id={12}
+            />
+            <SetujuChoise
+                question="Seberapa besar tingkat kepuasan Bapak/Ibu Tata pamong yang diterapkan di Universitas Syiah Kuala?"
+                id={13}
+            /> */}
+            
+            <div className="md:w-2/3 mx-auto bg-white p-5 md:p-7   rounded-lg flex justify-end">
+                <Button  type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] md:w-1/5">Submit</Button>
+            </div> 
         </div>
     );
 }
