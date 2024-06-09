@@ -1,11 +1,14 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
+import { usePathname } from "next/navigation";
+import axios from "axios";
+import BASE_URL from "../../../../../config";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export const data = {
+export const dataChart = {
     labels: ['Tidak Puas', 'Cukup Puas', 'Puas', 'Sangat Puas'],
     datasets: [
       {
@@ -30,10 +33,41 @@ export const data = {
 
 
 export default function page() {
+
+    const surveyId = usePathname().split('/').pop();
+    const [data, setData] =  useState<any>(null);
+
+    const fetchData = async () => {
+        try{
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${BASE_URL}/api/survey/${surveyId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            });
+            if (response.data.code === 200) {
+                setData(response.data.data);
+                console.log(response.data.data);
+            } else {
+                console.log('Gagal Mengambil data');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+    
     return (
         <div className="items-center justify-center px-5 md:px-10">
             <div className="mt-10">
-                <h1 className="text-2xl md:text-3xl font-bold text-center">Hasil Survey Kinerja Lulusan </h1>
+                {data ? (
+                    <h1 className="text-2xl md:text-3xl font-bold text-center">Hasil {data.title}</h1>
+                ) : (
+                    <h1 className="text-2xl md:text-3xl font-bold text-center">Loading...</h1>
+                )}
                 <p className="text-center font-medium">(10 Jawaban)</p>
             </div>
             <div className="mt-10 grid grid-cols-1 gap-10">
@@ -57,21 +91,21 @@ export default function page() {
                     <h1 className="font-bold text-xl">Pertanyaan: </h1>
                     <p className="font-semibold text-lg mb-5 bg-green-100">Seberapa besar tingkat kepentingan dan tingkat kepuasan perusahaan/ institusi Bapak/Ibu terhadap Universitas Syiah Kuala</p>
                     <div className="md:w-2/5">
-                        <Pie data={data} />
+                        <Pie data={dataChart} />
                     </div>
                 </div>
                 <div className=" p-2 md:p-7  outline outline-gray-300 rounded-md">
                     <h1 className="font-bold text-xl">Pertanyaan: </h1>
                     <p className="font-semibold text-lg mb-5 bg-green-100">Seberapa besar tingkat kepentingan dan tingkat kepuasan perusahaan/ institusi Bapak/Ibu terhadap Universitas Syiah Kuala</p>
                     <div className="md:w-2/5">
-                        <Pie data={data} />
+                        <Pie data={dataChart} />
                     </div>
                 </div>
                 <div className=" p-2 md:p-7  outline outline-gray-300 rounded-md">
                     <h1 className="font-bold text-xl">Pertanyaan: </h1>
                     <p className="font-semibold text-lg mb-5 bg-green-100">Seberapa besar tingkat kepentingan dan tingkat kepuasan perusahaan/ institusi Bapak/Ibu terhadap Universitas Syiah Kuala</p>
                     <div className="md:w-2/5">
-                        <Pie data={data} />
+                        <Pie data={dataChart} />
                     </div>
                 </div>
             </div>

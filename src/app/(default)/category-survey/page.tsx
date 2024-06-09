@@ -27,7 +27,7 @@ export default function page() {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
-        });
+            });
             if (response.data.code === 200) {
             setData(response.data.data);
             setLoading(false);
@@ -38,6 +38,8 @@ export default function page() {
             console.log(error);
         }
     }
+
+    console.log(data);
 
     useEffect(() => {
         fetchData();
@@ -58,16 +60,13 @@ export default function page() {
                 </div>
             )}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-24">
-                {data
-                    .filter((item, index, self) => self.findIndex(i => i.title === item.title) === index)
-                    .map((item) => (
-                        <CardSurvey
-                            key={item.id}
-                            title={item.title}
-                            id={`/category-survey/${item.id}`}
-                        />
-                    ))
-                }
+                {data.map((item) => (
+                    <CardSurvey
+                        key={item.id}
+                        title={item.title}
+                        id={`/category-survey/${item.id}`}
+                    />
+                ))}
                 
             </div>
         </div>

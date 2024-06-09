@@ -154,65 +154,89 @@ return (
         },
         }}
     >
-        <List
-        size="sm"
-        sx={{
-            
-            gap: 0.3,
-            '--List-nestedInsetStart': '30px',
-            '--ListItem-radius': (theme) => theme.vars.radius.sm,
-            marginTop: 3,
-        }}
-        >
-        {isAdmin === true && (
-            <ListItem >
-            <ListItemButton
-            role="menuitem"
-            component="a"
-            href="/dashboard"
+        {isAdmin? (
+            <List
+            size="sm"
+            sx={{
+                
+                gap: 0.3,
+                '--List-nestedInsetStart': '30px',
+                '--ListItem-radius': (theme) => theme.vars.radius.sm,
+                marginTop: 3,
+            }}
             >
-            <IconButton size="md" >
-                <ListAltIcon/>
-            </IconButton>
-            <ListItemContent>
-                <Typography level="title-sm">Dashboard</Typography>
-            </ListItemContent>
-            </ListItemButton>
-            </ListItem>
+                <ListItem >
+                    <ListItemButton
+                    role="menuitem"
+                    component="a"
+                    href="/dashboard"
+                    >
+                    <IconButton size="md" >
+                        <ListAltIcon/>
+                    </IconButton>
+                    <ListItemContent>
+                        <Typography level="title-sm">Dashboard</Typography>
+                    </ListItemContent>
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem>
+                    <ListItemButton
+                    role="menuitem"
+                    component="a"
+                    href="/hasil-responden"
+                    >
+                    <IconButton>
+                        <AssignmentTurnedInIcon />
+                    </IconButton>
+                    <ListItemContent>
+                        <Typography level="title-sm">Hasil Responden</Typography>
+                    </ListItemContent>
+                    </ListItemButton>
+                </ListItem>
+            </List>
+        ) : (
+            <List
+            size="sm"
+            sx={{
+                
+                gap: 0.3,
+                '--List-nestedInsetStart': '30px',
+                '--ListItem-radius': (theme) => theme.vars.radius.sm,
+                marginTop: 3,
+            }}
+            >
+                <ListItem >
+                    <ListItemButton
+                    role="menuitem"
+                    component="a"
+                    href="/category-survey"
+                    >
+                    <IconButton size="md" >
+                        <ListAltIcon/>
+                    </IconButton>
+                    <ListItemContent>
+                        <Typography level="title-sm">Category Survey</Typography>
+                    </ListItemContent>
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem>
+                    <ListItemButton
+                    role="menuitem"
+                    component="a"
+                    href="/hasil-responden"
+                    >
+                    <IconButton>
+                        <AssignmentTurnedInIcon />
+                    </IconButton>
+                    <ListItemContent>
+                        <Typography level="title-sm">Hasil Responden</Typography>
+                    </ListItemContent>
+                    </ListItemButton>
+                </ListItem>
+            </List>
         )}
-        
-        <ListItem >
-            <ListItemButton
-            role="menuitem"
-            component="a"
-            href="/category-survey"
-            >
-            <IconButton size="md" >
-                <ListAltIcon/>
-            </IconButton>
-            <ListItemContent>
-                <Typography level="title-sm">Category Survey</Typography>
-            </ListItemContent>
-            </ListItemButton>
-        </ListItem>
-
-        <ListItem>
-            <ListItemButton
-            role="menuitem"
-            component="a"
-            href="/hasil-responden"
-            >
-            <IconButton>
-                <AssignmentTurnedInIcon />
-            </IconButton>
-            <ListItemContent>
-                <Typography level="title-sm">Hasil Responden</Typography>
-            </ListItemContent>
-            </ListItemButton>
-        </ListItem>
-        
-
-        </List>
 
         
     </Box>

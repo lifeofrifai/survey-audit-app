@@ -47,16 +47,13 @@ export default function page() {
                 <h1 className="text-4xl font-bold text-center">Hasil Responden</h1>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-24">
-                {data
-                    .filter((item, index, self) => self.findIndex(i => i.title === item.title) === index)
-                    .map((item) => (
-                        <CardSurveyHasil
-                            key={item.id}
-                            title={item.title}
-                            id={`/hasil-responden/${item.id}`}
-                        />
-                    ))
-                }
+                {data.map((item) => (
+                    <CardSurveyHasil
+                    key={item.id}
+                    title={item.title}
+                    id={`/hasil-responden/${item.id}`}
+                />
+                ))}
             </div>
         </div>
     );

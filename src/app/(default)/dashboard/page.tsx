@@ -48,6 +48,8 @@ export default function page() {
         }
     }
 
+    console.log(data);
+
 
 
     useEffect(() => {
@@ -58,7 +60,7 @@ export default function page() {
     return (
         <div className="items-center justify-center flex-1 px-5 md:px-10">
             <div className="mt-10">
-                <h1 className="text-4xl font-bold text-center">Dashboard Survey</h1>
+                <h1 className="text-4xl font-bold text-center">Dashboard Admin Survey</h1>
             </div>
 
             <div className=" mt-24">
@@ -71,16 +73,13 @@ export default function page() {
                     </Link>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 md:gap-4">
-                    {data
-                        .filter((item, index, self) => self.findIndex(i => i.title === item.title) === index)
-                        .map((item) => (
-                            <DashboardCard
+                    {data.map((item) => (
+                        <DashboardCard
                                 key={item.id}
                                 title={item.title}
                                 id={item.id}
                             />
-                        ))
-                    }
+                    ))}
                 </div>
             </div>
         </div>
