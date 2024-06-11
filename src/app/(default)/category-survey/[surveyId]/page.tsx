@@ -172,6 +172,7 @@ export default function page() {
                     )}
                     {item.type === 'jenis_kelamin' && (
                         <JenisKelaminChoise
+                            question={item.question}
                             id={item.id}
                             onDataChange={handleDataChange}
                         />

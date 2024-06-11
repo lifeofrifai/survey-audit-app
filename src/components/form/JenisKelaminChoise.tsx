@@ -3,11 +3,13 @@ import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 interface JenisKelaminChoise {
+    question: string;
     id: any;
     onDataChange: (id: string, value: string) => void;
 }
 
 const JenisKelaminChoise = ({
+    question,
     id,
     onDataChange
 }: JenisKelaminChoise) => {
@@ -23,7 +25,7 @@ const JenisKelaminChoise = ({
 
     return (
         <div className="md:w-2/3 mx-auto bg-white p-7 md:p-10 pb-12 rounded-lg my-3">
-            <Label htmlFor="" className="text-md">Jenis kelamin</Label>
+            <Label htmlFor="" className="text-md">{question}</Label>
             <RadioGroup 
                 className="gap-4 mt-3"
                 value={value}

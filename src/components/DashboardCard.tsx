@@ -54,7 +54,7 @@ const CardSurvey = ({
             <div>
                 <p className="text-white font-semibold text-xl">{title}</p>
             </div>
-            <div className="flex flex-row gap-2 items-center">
+            <div className="flex flex-col gap-2  ">
                 <Button variant="secondary" size="sm" className="bg-yellow-400">
                     <PenLine className="mr-2 h-4 w-4"/>
                     Edit
