@@ -24,7 +24,7 @@ const JenisKelaminChoise = ({
     console.log("Value yang dipilih adalah", value);
 
     return (
-        <div className="md:w-2/3 mx-auto bg-white p-7 md:p-10 pb-12 rounded-lg my-3">
+        <div className="md:w-2/3 mx-auto bg-white p-7 md:p-10 pb-12 rounded-lg my-5">
             <Label htmlFor="" className="text-md">{question}</Label>
             <RadioGroup 
                 className="gap-4 mt-3"

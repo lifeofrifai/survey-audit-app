@@ -1,14 +1,45 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Questions from "@/components/questions/Questions";
 import AddDelete from "@/components/questions/AddDelete";
+import { usePathname } from "next/navigation";
+import axios from "axios";
+import BASE_URL from "../../../../../../config";
 
 
 export default function page() {
 
+    const surveyId = usePathname().split('/').pop();
+    const [data, setData] = useState<any>(null);
     const [questions, setQuestions] = useState<{ count: number }[]>([]);
+
+    const fetchData = async () => {
+        try{
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${BASE_URL}/api/survey/${surveyId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            });
+            if (response.data.code === 200) {
+                setData(response.data.data);
+            } else {
+                console.log('Gagal Mengambil data');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    console.log("data si survey",data);
+
+    
 
     const handleAdd = () => {
         setQuestions([...questions, { count: questions.length }]);
@@ -22,10 +53,12 @@ export default function page() {
     
     return (
         <div className="items-center justify-center flex-1 px-5 md:px-10 py-5 md:py-10">
-                <div className=" md:w-2/3 mx-auto bg-white p-7 md:p-10 rounded-lg">
-                    <h1 className="text-3xl font-bold text-[#3D9ADD]">Buat Survey:</h1>
-                    <p className="text-gray-500 mt-1 text-sm md:text-base">Silahkan isi survey sampai dengan selesai dan pastikan anda mengisi dengan benar!!</p>
-                </div> 
+                {data && (
+                    <div className=" md:w-2/3 mx-auto bg-white p-7 md:p-10 rounded-lg">
+                        <h1 className="text-3xl font-bold text-[#3D9ADD]">Kelola Survey : {data.title}</h1>
+                        <p className="text-gray-500 mt-1 text-sm md:text-base">Tambahkan Pertanyaan untuk Survey {data.title}</p>
+                    </div>
+                )}
                 <div className="flex flex-col items-center mx-auto md:w-2/3 my-3">
                     {questions.map((item) => (
                         <Questions

@@ -22,7 +22,7 @@ const LongTextFormSurvey = ({
         onDataChange(id, e.target.value);
     }
     return (
-        <div className="md:w-2/3 mx-auto bg-white p-7 md:p-10   pb-12 rounded-lg my-3">
+        <div className="md:w-2/3 mx-auto bg-white p-7 md:p-10   pb-12 rounded-lg my-5">
             <Label htmlFor={`longTxtFormSurvey${id}`} className="text-md">{question}</Label>
             <Textarea 
                 className="mt-3 h-8"
