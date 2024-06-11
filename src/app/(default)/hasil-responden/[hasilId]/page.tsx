@@ -70,8 +70,8 @@ export default function page() {
                 )}
                 <p className="text-center font-medium">(10 Jawaban)</p>
             </div>
-            <div className="mt-10 grid grid-cols-1 gap-10">
-                <div className=" p-3 md:p-7  outline outline-gray-300 rounded-md">
+            <div className="mt-10 grid grid-cols-1 gap-10 ">
+                <div className=" p-3 md:p-7  outline outline-gray-300 rounded-md bg-white">
                     <h1 className="font-bold text-lg md:text-xl">Pertanyaan: </h1>
                     <p className="font-semibold text-base md:text-lg mb-5 bg-green-100">Nama Lengkap</p>
                     <div className="grid grid-cols-4 gap-4">
@@ -87,21 +87,21 @@ export default function page() {
                         <p className="p-2 outline outline-gray-300 rounded-md text-center">Muhammad Nurifai</p>
                     </div>
                 </div>
-                <div className=" p-2 md:p-7  outline outline-gray-300 rounded-md">
+                <div className=" p-2 md:p-7  outline outline-gray-300 rounded-md bg-white">
                     <h1 className="font-bold text-xl">Pertanyaan: </h1>
                     <p className="font-semibold text-lg mb-5 bg-green-100">Seberapa besar tingkat kepentingan dan tingkat kepuasan perusahaan/ institusi Bapak/Ibu terhadap Universitas Syiah Kuala</p>
                     <div className="md:w-2/5">
                         <Pie data={dataChart} />
                     </div>
                 </div>
-                <div className=" p-2 md:p-7  outline outline-gray-300 rounded-md">
+                <div className=" p-2 md:p-7  outline outline-gray-300 rounded-md bg-white">
                     <h1 className="font-bold text-xl">Pertanyaan: </h1>
                     <p className="font-semibold text-lg mb-5 bg-green-100">Seberapa besar tingkat kepentingan dan tingkat kepuasan perusahaan/ institusi Bapak/Ibu terhadap Universitas Syiah Kuala</p>
                     <div className="md:w-2/5">
                         <Pie data={dataChart} />
                     </div>
                 </div>
-                <div className=" p-2 md:p-7  outline outline-gray-300 rounded-md">
+                <div className=" p-2 md:p-7  outline outline-gray-300 rounded-md bg-white">
                     <h1 className="font-bold text-xl">Pertanyaan: </h1>
                     <p className="font-semibold text-lg mb-5 bg-green-100">Seberapa besar tingkat kepentingan dan tingkat kepuasan perusahaan/ institusi Bapak/Ibu terhadap Universitas Syiah Kuala</p>
                     <div className="md:w-2/5">
