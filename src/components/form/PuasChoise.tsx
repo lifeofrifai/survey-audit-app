@@ -5,17 +5,21 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 interface PuasChoise {
     question: string;
     id: any;
+    onDataChange: (id: string, value: string) => void;
 }
 
 const PuasChoise = ({
     question,
-    id
+    id,
+    onDataChange
+
 }: PuasChoise) => {
 
     const [value, setValue] = useState('');
 
     const handleValueChange = (newValue: string) => {
         setValue(newValue);
+        onDataChange(id, newValue);
     }
 
     console.log("Value yang dipilih adalah", value);

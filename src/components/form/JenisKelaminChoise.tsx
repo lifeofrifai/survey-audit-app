@@ -4,16 +4,19 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 interface JenisKelaminChoise {
     id: any;
+    onDataChange: (id: string, value: string) => void;
 }
 
 const JenisKelaminChoise = ({
-    id
+    id,
+    onDataChange
 }: JenisKelaminChoise) => {
 
     const [value, setValue] = useState('');
 
     const handleValueChange = (newValue: string) => {
         setValue(newValue);
+        onDataChange(id, newValue);
     }
 
     console.log("Value yang dipilih adalah", value);

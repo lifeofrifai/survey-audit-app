@@ -12,6 +12,8 @@ import TextFormSurvey from "@/components/form/TextFormSurvey";
 import JenisKelaminChoise from "@/components/form/JenisKelaminChoise";
 import PuasChoise from "@/components/form/PuasChoise";
 import SetujuChoise from "@/components/form/SetujuChoise";
+import LongTextFormSurvey from "@/components/form/LongTextFormSurvey";
+import toast, { Toaster } from 'react-hot-toast';
 
 
 export default function page() {
@@ -20,11 +22,20 @@ export default function page() {
         id: number;
         survey_id: number;
         question: string;
+        type: string;
+    }
+
+    interface FormData {
+        [key: string]: string;
     }
 
     
     const surveyId = usePathname().split('/').pop();
     const [data, setData] =  useState<any>(null);
+    const [question, setQuestion] = useState<Question[]>([]);
+    const [form, setForm] = useState<FormData>({});
+    const notifySuccsessSurvey = () => toast.success('Survey Berhasil diisi!');
+    const notifyFailedSurvey = () => toast.error('Survey Gagal diisi!');
 
     const fetchData = async () => {
         try{
@@ -43,8 +54,6 @@ export default function page() {
             console.log(error);
         }
     };
-
-    const [question, setQuestion] = useState<Question[]>([]);
 
     const fetchDataQuestion = async () => {
         try{
@@ -73,10 +82,53 @@ export default function page() {
         }
     }, [surveyId]);
 
+    const handleDataChange = (id: any, value: any) => {
+        setForm(prevData => ({
+            ...prevData,
+            [id]: value
+        }));
+    };
+
+    const handleFormSubmit = async () => {
+        const formattedData = Object.keys(form).map(key => ({
+            question_id: parseInt(key, 10),
+            answer: form[key]
+        }));
+
+        try{
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`${BASE_URL}/api/answer`, formattedData, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            });
+            if (response.data.code === 200) {
+                notifySuccsessSurvey();
+                console.log("data yang disimpan", formattedData);
+                
+            } else {
+                notifyFailedSurvey();
+                console.log("data yang gagal disimpan", formattedData);
+            }
+        } catch (error) {
+            console.log(error);
+            console.log("data yang eror ", formattedData);
+        }
+    }
 
 
     return (
         <div className="items-center justify-center flex-1 px-5 md:px-10 py-5 md:py-10 ">
+            <Toaster 
+                position="top-center"
+                toastOptions={{
+                    duration: 1800,
+                    style: {
+                        background: '#fff',
+                        color: '#3D9ADD',
+                    },
+                }}
+            />
             {data ? (
                 <div className=" md:w-2/3 mx-auto bg-white p-7 md:p-10  rounded-lg mb-3">
                     <h1 className="text-3xl font-bold text-[#3D9ADD]">{data.title}</h1>
@@ -85,43 +137,50 @@ export default function page() {
             ):(
                 <div className="md:w-2/3 mx-auto bg-white  p-7 md:p-10   rounded-lg mb-3">
                     <h1 className="text-3xl font-bold text-[#3D9ADD]">Loading....</h1>
-                    <p className="text-gray-500 mt-1">............</p>
                 </div>
             )}
+
             {question.map((item) => (
                 <div key={item.id}>
-                    <TextFormSurvey
-                        question={item.question}
-                        id={item.id}                   
-                    />
-                    <JenisKelaminChoise
-                        id={item.id}
-                    />
-                    <SetujuChoise
-                        question={item.question}
-                        id={item.id}
-                    />
-                    <PuasChoise
-                        question={item.question}
-                        id={item.id}
-                    />
+                    {item.type === 'text' && (
+                        <TextFormSurvey
+                            question={item.question}
+                            id={item.id}
+                            onDataChange={handleDataChange}
+                        />
+                    )}
+                    {item.type === 'long_text' && (
+                        <LongTextFormSurvey
+                            question={item.question}
+                            id={item.id}
+                            onDataChange={handleDataChange}
+                        />
+                    )}
+                    {item.type === 'setuju_choice' && (
+                        <SetujuChoise
+                            question={item.question}
+                            id={item.id}
+                            onDataChange={handleDataChange}
+                        />
+                    )}
+                    {item.type === 'puas_choice' && (
+                        <PuasChoise
+                            question={item.question}
+                            id={item.id}
+                            onDataChange={handleDataChange}
+                        />
+                    )}
+                    {item.type === 'jenis_kelamin' && (
+                        <JenisKelaminChoise
+                            id={item.id}
+                            onDataChange={handleDataChange}
+                        />
+                    )}
                 </div>
             ))}
-            {/* <JenisKelaminChoise
-                id={10}
-            />
-            
-            <PuasChoise
-                question="Seberapa besar tingkat kepuasan Bapak/Ibu Tata pamong yang diterapkan di Universitas Syiah Kuala?"
-                id={12}
-            />
-            <SetujuChoise
-                question="Seberapa besar tingkat kepuasan Bapak/Ibu Tata pamong yang diterapkan di Universitas Syiah Kuala?"
-                id={13}
-            /> */}
             
             <div className="md:w-2/3 mx-auto bg-white p-5 md:p-7   rounded-lg flex justify-end">
-                <Button  type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] md:w-1/5">Submit</Button>
+                <Button onClick={handleFormSubmit}  type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] md:w-1/5">Submit</Button>
             </div> 
         </div>
     );

@@ -64,7 +64,7 @@ export default function page() {
             </div>
 
             <div className=" mt-24">
-                <div className="w-30 mb-5 flex flex-row justify-end">
+                <div className="w-30 mb-5 flex flex-row justify-end bg-white p-5 rounded-lg">
                     <Link href={"/dashboard/addSurvey"} >
                         <Button type="button" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046]">
                             <CirclePlus className="mr-2 h-4 w-4"/>
@@ -72,7 +72,7 @@ export default function page() {
                         </Button>
                     </Link>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 md:gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 md:gap-4 bg-white p-5 rounded-lg">
                     {data.map((item) => (
                         <DashboardCard
                                 key={item.id}

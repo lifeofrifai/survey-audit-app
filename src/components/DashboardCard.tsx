@@ -50,7 +50,7 @@ const CardSurvey = ({
     };
 
     return (
-        <div className="bg-[#0B62A0] w-full py-6 px-8 rounded-lg flex flex-row justify-between items-center mb-3">
+        <div className="bg-[#0B62A0] w-full py-6 px-8 rounded-lg flex flex-row justify-between items-center ">
             <div>
                 <p className="text-white font-semibold text-xl">{title}</p>
             </div>

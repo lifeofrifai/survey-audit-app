@@ -1,32 +1,32 @@
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 import { useState } from "react";
 
-interface TextFormSurvey {
+interface LongTextFormSurvey {
     question: string;
     id: any;
     onDataChange: (id: string, value: string) => void;
 }
 
-const TextFormSurvey = ({
+const LongTextFormSurvey = ({
     question,
     id,
     onDataChange
-}: TextFormSurvey) => {
+}: LongTextFormSurvey) => {
 
     const [text, setText] = useState('');
     
-    const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setText(e.target.value);
         onDataChange(id, e.target.value);
     }
     return (
         <div className="md:w-2/3 mx-auto bg-white p-7 md:p-10   pb-12 rounded-lg my-3">
-            <Label htmlFor={`txtFormSurvey${id}`} className="text-md">{question}</Label>
-            <Input 
-                className="mt-3"
-                type="text" 
-                id={`txtFormSurvey${id}`}
+            <Label htmlFor={`longTxtFormSurvey${id}`} className="text-md">{question}</Label>
+            <Textarea 
+                className="mt-3 h-8"
+                id={`longTxtFormSurvey${id}`}
                 placeholder="Jawaban Anda" 
                 value={text}
                 onChange={handleTextChange}
@@ -36,4 +36,4 @@ const TextFormSurvey = ({
     );
 }
 
-export default TextFormSurvey;
+export default LongTextFormSurvey;
