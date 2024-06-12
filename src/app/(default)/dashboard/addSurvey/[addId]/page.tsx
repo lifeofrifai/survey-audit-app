@@ -11,9 +11,16 @@ import BASE_URL from "../../../../../../config";
 
 export default function page() {
 
+    interface FormData {
+        survey_id: number;
+        question: string;
+        type: string;
+    }
+
     const surveyId = usePathname().split('/').pop();
     const [data, setData] = useState<any>(null);
     const [questions, setQuestions] = useState<{ count: number }[]>([]);
+    const [form, setForm] = useState<FormData[]>([]);
 
     const fetchData = async () => {
         try{
@@ -37,16 +44,41 @@ export default function page() {
         fetchData();
     }, []);
 
-    console.log("data si survey",data);
+    const handleDataChange = (question: string, type: string, index: number) => {
+        const newForm = [...form];
+        newForm[index] = { survey_id: parseInt(surveyId || ""), question, type };
+        setForm(newForm);
+    };
 
+    console.log("Handle data Change", form);
+
+    const submitForm = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`${BASE_URL}/api/question`, form, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            });
+            if (response.data.code === 200) {
+                console.log('Berhasil Menambahkan Form');
+            } else {
+                console.log('Gagal Menambahkan Form');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
     
 
     const handleAdd = () => {
         setQuestions([...questions, { count: questions.length }]);
+        setForm([...form, { survey_id: parseInt(surveyId || ""), question: "", type: "" }]);
     };
 
     const handleDelete = () => {
         setQuestions(questions.slice(0, -1));
+        setForm(form.slice(0, -1));
     };
 
     console.log(questions);
@@ -60,9 +92,10 @@ export default function page() {
                     </div>
                 )}
                 <div className="flex flex-col items-center mx-auto md:w-2/3 my-3">
-                    {questions.map((item) => (
+                    {questions.map((item, index) => (
                         <Questions
                             key={item.count}
+                            onDataChange={(question, type) => handleDataChange(question, type, index)}
                         />
                     ))}
                     <AddDelete
@@ -75,7 +108,7 @@ export default function page() {
 
                 {questions.length > 0 &&(
                     <div className="md:w-2/3 mx-auto bg-white p-5 md:p-7   rounded-lg flex justify-center">
-                        <Button   type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] md:w-1/5">Save Form</Button>
+                        <Button onClick={submitForm}   type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] md:w-1/5">Save Form</Button>
                     </div>
                 )}
         </div>

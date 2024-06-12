@@ -88,6 +88,7 @@ export default function page() {
             [id]: value
         }));
     };
+    console.log("Form Data", form);
 
     const handleFormSubmit = async () => {
         const formattedData = Object.keys(form).map(key => ({

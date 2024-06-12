@@ -5,18 +5,18 @@ import { CirclePlus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Questions {
-
+    onDataChange: (question: string, type: string) => void;
 }
 
 const Questions = ({
-
+    onDataChange
 }: Questions) => {
 
-    const [value, setValue] = useState('');
+    const [type, setType] = useState('');
     const [question, setQuestion] = useState('');
 
-    const handleValueChange = (newValue: string) => {
-        setValue(newValue);
+    const handleTypeChange = (e: string) => {
+        setType(e);
     }
 
     const handleQuestionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -24,21 +24,23 @@ const Questions = ({
     }
 
     useEffect(() => {
-        if (value === 'jenis_kelamin') {
-            setQuestion('Jenis Kelamin');
+        if (type === 'jenis_kelamin') {
+            const prefilledQuestion = 'Jenis Kelamin';
+            setQuestion(prefilledQuestion);
+            onDataChange(prefilledQuestion, type);
         } else {
-            setQuestion('');
+            onDataChange(question, type);
         }
-    }, [value]);
+    }, [type, question]);
     
-    console.log("Value yang dipilih adalah", value);
-    console.log("Pertanyaan yang diinput adalah", question);
+    console.log("Type yang dipilih adalah", type);
+    console.log("Question yang diinput adalah", question);
 
 return (
     <div className=" w-full bg-white p-7 md:p-10 rounded-lg my-2">
         <div className="flex justify-end">
             <Select
-                onValueChange={handleValueChange}
+                onValueChange={handleTypeChange}
             >
                 <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Pilih Jenis Form" />
@@ -58,18 +60,10 @@ return (
             placeholder="Masukan Pertanyaan"
             value={question}
             onChange={handleQuestionChange}
-            disabled={value === 'jenis_kelamin' ? true : false}
+            disabled={type === 'jenis_kelamin' ? true : false}
             />
         </div>
     </div>
-    // <div className="mt-3 flex flex-row gap-2">
-    //     <Button className="rounded-full shadow-md" variant="destructive"  size="icon">
-    //         <Trash2 className=" h-4 w-4"/>
-    //     </Button>
-    //     <Button className="rounded-full bg-white hover:bg-gray-200 shadow-md" variant="default" size="icon">
-    //         <CirclePlus className="h-5 w-5 text-[#00B907]"/>
-    //     </Button>
-    // </div>
     );
 }
 
