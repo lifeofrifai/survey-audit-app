@@ -59,6 +59,7 @@ export default function page() {
                     <p>Loading....</p>
                 </div>
             )}
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-24">
                 {data.map((item) => (
                     <CardSurvey
@@ -72,4 +73,4 @@ export default function page() {
         </div>
     );
 }
-    
+
