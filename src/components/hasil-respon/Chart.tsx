@@ -32,7 +32,7 @@ export const dataChartJenisKelamin = {
 };
 
 export const dataChartPuas = {
-    labels: ['Laki-Laki', 'Perempuan'],
+    labels: ['Sangat Puas', 'Puas', 'Cukup Puas', 'Tidak Puas'],
     datasets: [
     {
         label: 'Jumlah Voter',
@@ -55,7 +55,7 @@ export const dataChartPuas = {
 };
 
 export const dataChartSetuju = {
-    labels: ['Laki-Laki', 'Perempuan'],
+    labels: ['Sangat Setuju', 'Setuju','Netral', 'Tidak Setuju', 'Sangat Tidak Setuju'],
     datasets: [
     {
         label: 'Jumlah Voter',
@@ -89,6 +89,21 @@ const Chart = ({
 
 
     const [answers, setAnswers] = useState<any>(null);
+
+    const [jenisKelaminLakiCount, setJenisKelaminLakiCount] = useState(0);
+    const [jenisKelaminPrCount, setJenisKelaminPrCount] = useState(0);
+
+    const [sangatPuasCount, setSangatPuasCount] = useState(0);
+    const [puasCount, setPuasCount] = useState(0);
+    const [cukupPuasCount, setCukupPuasCount] = useState(0);
+    const [tidakPuasCount, setTidakPuasCount] = useState(0);
+
+    const [SangatSetujuCount, setSangatSetujuCount] = useState(0);
+    const [setujuCount, setSetujuCount] = useState(0);
+    const [netralCount, setNetralCount] = useState(0);
+    const [tidakSetujuCount, setTidakSetujuCount] = useState(0);
+    const [sangatTidaksetujuCount, setSangatTidakSetujuCount] = useState(0);
+
     const question_id = id;
 
     const fetchAllAnswer = async () => {
@@ -111,13 +126,97 @@ const Chart = ({
         }
     }
 
+    const countChartData = (filteredAnswers: any[]) => {
+        let laki = 0;
+        let pr = 0;
+        let Sangatpuas = 0;
+        let puas = 0;
+        let cukupPuas = 0;
+        let tidakPuas = 0;
+        let sangatSetuju = 0;
+        let setuju = 0;
+        let netral = 0;
+        let tidakSetuju = 0;
+        let sangatTidakSetuju = 0;
+
+        filteredAnswers.forEach((answer) => {
+            const questionType = answer.question[0].type;
+            if (questionType === 'jenis_kelamin') {
+                if (answer.answer === 'Laki-Laki') {
+                    laki++;
+                } else {
+                    pr++;
+                }
+            } else if (questionType === 'puas_choice') {
+                if (answer.answer === 'Sangat Puas') {
+                    Sangatpuas++;
+                } else if (answer.answer === 'Puas') {
+                    puas++;
+                } else if (answer.answer === 'Cukup Puas') {
+                    cukupPuas++;
+                } else {
+                    tidakPuas++;
+                }
+            } else if (questionType === 'setuju_choice') {
+                if (answer.answer === 'Sangat Setuju') {
+                    sangatSetuju++;
+                } else if (answer.answer === 'Setuju') {
+                    setuju++;
+                } else if (answer.answer === 'Netral') {
+                    netral++;
+                } else if (answer.answer === 'Tidak Setuju') {
+                    tidakSetuju++;
+                } else {
+                    sangatTidakSetuju++;
+                }
+            }
+        });
+
+        setJenisKelaminLakiCount(laki);
+        setJenisKelaminPrCount(pr);
+        setSangatPuasCount(Sangatpuas);
+        setPuasCount(puas);
+        setCukupPuasCount(cukupPuas);
+        setTidakPuasCount(tidakPuas);
+        setSangatSetujuCount(sangatSetuju);
+        setSetujuCount(setuju);
+        setNetralCount(netral);
+        setTidakSetujuCount(tidakSetuju);
+        setSangatTidakSetujuCount(sangatTidakSetuju);
+    };
+    // console.log("Jenis Kelamin Laki", jenisKelaminLakiCount);
+    // console.log("Jenis Kelamin Perempuan", jenisKelaminPrCount);
+    // console.log("Sangat Puas", sangatPuasCount);
+    // console.log("Puas", puasCount);
+    // console.log("Cukup Puas", cukupPuasCount);
+    // console.log("Tidak Puas", tidakPuasCount);
+
     useEffect(() => {
         fetchAllAnswer();
     }, [question_id]);
+    
+    useEffect(() => {
+        if (answers) {
+            countChartData(answers);
+        }
+    }, [answers]);
 
-    return (
-        <Pie data={dataChartJenisKelamin} />
-    );
+
+
+    if (!answers || answers.length === 0 || !answers[0].question) {
+        return null; // Or any loading indicator you prefer
+    }
+
+    const questionType = answers[0].question[0].type;
+
+    if (questionType === 'jenis_kelamin') {
+        return <Pie data={dataChartJenisKelamin} />;
+    } else if (questionType === 'puas_choice') {
+        return <Pie data={dataChartPuas} />;
+    } else if (questionType === 'setuju_choice') {
+        return <Pie data={dataChartSetuju} />;
+    }
+    
 }
 
 export default Chart;

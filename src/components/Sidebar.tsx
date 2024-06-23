@@ -3,7 +3,6 @@ import React, { useEffect, useState} from 'react';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
-import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
@@ -15,6 +14,13 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { Button } from "@/components/ui/button"
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import Divider from '@mui/joy/Divider';
+import DialogTitle from '@mui/joy/DialogTitle';
+import DialogContent from '@mui/joy/DialogContent';
+import DialogActions from '@mui/joy/DialogActions';
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 
 import { closeSidebar } from '@/components/utils';
 import { list } from 'postcss';
@@ -55,6 +61,7 @@ export default function Sidebar() {
     const [isAdmin, setIsAdmin] = useState(false);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -269,8 +276,30 @@ return (
         {/* <Typography level="body-xs">{isAdmin}</Typography> */}
         </Box>
         <IconButton size="sm" variant="plain" color="neutral">
-        <LogoutRoundedIcon onClick={handleLogout} />
+        <LogoutRoundedIcon onClick={() => setOpen(true)} />
         </IconButton>
+        <React.Fragment >
+            <Modal open={open} onClose={() => setOpen(false)} sx={{zIndex: 99999}}>
+                <ModalDialog variant="outlined" role="alertdialog">
+                <DialogTitle>
+                    <WarningRoundedIcon />
+                    Confirmation
+                </DialogTitle>
+                <Divider />
+                <DialogContent>
+                    Apakah anda yakin ingin Keluar?
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="destructive" color="danger" onClick={handleLogout}>
+                        Keluar
+                    </Button>
+                    <Button variant="default"  onClick={() => setOpen(false)}>
+                        Cancel
+                    </Button>
+                </DialogActions>
+                </ModalDialog>
+            </Modal>
+        </React.Fragment>
     </Box>
 
     </Sheet>
