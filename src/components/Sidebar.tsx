@@ -242,21 +242,6 @@ return (
                     </ListItemContent>
                     </ListItemButton>
                 </ListItem>
-
-                <ListItem>
-                    <ListItemButton
-                    role="menuitem"
-                    component="a"
-                    href="/hasil-responden"
-                    >
-                    <IconButton>
-                        <AssignmentTurnedInIcon />
-                    </IconButton>
-                    <ListItemContent>
-                        <Typography level="title-sm">Hasil Responden</Typography>
-                    </ListItemContent>
-                    </ListItemButton>
-                </ListItem>
             </List>
         )}
 

@@ -7,6 +7,7 @@ import AddDelete from "@/components/questions/AddDelete";
 import { usePathname } from "next/navigation";
 import axios from "axios";
 import BASE_URL from "../../../../../../config";
+import toast, { Toaster } from 'react-hot-toast';
 
 
 export default function page() {
@@ -21,6 +22,7 @@ export default function page() {
     const [data, setData] = useState<any>(null);
     const [questions, setQuestions] = useState<{ count: number }[]>([]);
     const [form, setForm] = useState<FormData[]>([]);
+    const notifySuccsess = () => toast.success('Survey Berhasil dibuat!');
 
     const fetchData = async () => {
         try{
@@ -62,6 +64,10 @@ export default function page() {
             });
             if (response.data.code === 200) {
                 console.log('Berhasil Menambahkan Form');
+                notifySuccsess();
+                setTimeout(() => {
+                    window.location.href = '/dashboard';
+                }, 1500);
             } else {
                 console.log('Gagal Menambahkan Form');
             }
@@ -85,6 +91,16 @@ export default function page() {
     
     return (
         <div className="items-center justify-center flex-1 px-5 md:px-10 py-5 md:py-10">
+            <Toaster 
+                position="top-center"
+                toastOptions={{
+                    duration: 1800,
+                    style: {
+                        background: '#fff',
+                        color: '#3D9ADD',
+                    },
+                }}
+            />
                 {data && (
                     <div className=" md:w-2/3 mx-auto bg-white p-7 md:p-10 rounded-lg">
                         <h1 className="text-3xl font-bold text-[#3D9ADD]">Kelola Survey : {data.title}</h1>
