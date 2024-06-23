@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CardSurvey from "@/components/CardSurvey";
 import axios from "axios";
-import { useState } from "react";
 import BASE_URL from "../../../../config";
-import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
 
-
-export default function page() {
+export default function Page() {
 
     interface Survey {
         id: number;
@@ -16,12 +14,23 @@ export default function page() {
         question: string;
     }
 
+    interface Answer {
+        id: number;
+        question_id: number;
+        user_id: number;
+        answer: string;
+        question: any[];
+        user: any[];
+        created_at: string;
+        updated_at: string;
+    }
 
     const [data, setData] = useState<Survey[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
-        try{
+        try {
+            const idUser = localStorage.getItem('id') ?? "";
             const token = localStorage.getItem('token');
             const response = await axios.get(`${BASE_URL}/api/survey`, {
                 headers: {
@@ -29,10 +38,32 @@ export default function page() {
                 },
             });
             if (response.data.code === 200) {
-            setData(response.data.data);
-            setLoading(false);
+                let surveys = response.data.data;
+
+                // Fetching answers to filter completed surveys
+                const answersResponse = await axios.get(`${BASE_URL}/api/answer`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                });
+
+                if (answersResponse.data.code === 200) {
+                    const answers: Answer[] = answersResponse.data.data;
+
+                    // Filter out surveys completed by the current user
+                    const completedSurveyIds = new Set(
+                        answers
+                            .filter(answer => answer.user_id === parseInt(idUser))
+                            .map(answer => answer.question[0].survey_id)
+                    );
+
+                    surveys = surveys.filter((survey: { id: any; }) => !completedSurveyIds.has(survey.id));
+                }
+
+                setData(surveys);
+                setLoading(false);
             } else {
-            console.log('Gagal Mengambil data');
+                console.log('Failed to fetch data');
             }
         } catch (error) {
             console.log(error);
@@ -44,8 +75,6 @@ export default function page() {
     useEffect(() => {
         fetchData();
     }, []);
-
-
 
     return (
         <div className="items-center justify-center flex-1 px-5 md:px-10">
@@ -59,8 +88,14 @@ export default function page() {
                     <p>Loading....</p>
                 </div>
             )}
+            {data.length === 0 && (
+                <div className="flex items-center justify-center h-screen">
+                    <p>Tidak ada Survey</p>
+                </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-24">
+                
                 {data.map((item) => (
                     <CardSurvey
                         key={item.id}
@@ -73,4 +108,3 @@ export default function page() {
         </div>
     );
 }
-

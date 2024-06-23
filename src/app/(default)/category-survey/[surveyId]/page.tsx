@@ -105,6 +105,9 @@ export default function page() {
             });
             if (response.data.code === 200) {
                 notifySuccsessSurvey();
+                setTimeout(() => {
+                    window.location.href = '/category-survey';
+                }, 1500);
                 console.log("data yang disimpan", formattedData);
                 
             } else {
