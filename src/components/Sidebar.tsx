@@ -187,20 +187,6 @@ return (
                     </ListItemButton>
                 </ListItem>
                 
-                <ListItem >
-                    <ListItemButton
-                    role="menuitem"
-                    component="a"
-                    href="/category-survey"
-                    >
-                    <IconButton size="md" >
-                        <ListAltIcon/>
-                    </IconButton>
-                    <ListItemContent>
-                        <Typography level="title-sm">Category Survey</Typography>
-                    </ListItemContent>
-                    </ListItemButton>
-                </ListItem>
 
                 <ListItem>
                     <ListItemButton

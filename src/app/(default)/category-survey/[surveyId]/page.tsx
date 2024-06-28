@@ -34,53 +34,112 @@ export default function page() {
     const [data, setData] =  useState<any>(null);
     const [question, setQuestion] = useState<Question[]>([]);
     const [form, setForm] = useState<FormData>({});
+    const [haveAnswered, setHaveAnswered] = useState(false);
     const notifySuccsessSurvey = () => toast.success('Survey Berhasil diisi!');
     const notifyFailedSurvey = () => toast.error('Survey Gagal diisi!');
 
     const fetchData = async () => {
-        try{
+        try {
+            const idUser = localStorage.getItem('id') ?? "";
             const token = localStorage.getItem('token');
-            const response = await axios.get(`${BASE_URL}/api/survey/${surveyId}`, {
+            const surveyResponse = await axios.get(`${BASE_URL}/api/survey/${surveyId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
             });
-            if (response.data.code === 200) {
-                setData(response.data.data);
+            if (surveyResponse.data.code === 200) {
+                setData(surveyResponse.data.data);
             } else {
-                console.log('Gagal Mengambil data');
+                console.log('Failed to fetch survey data');
+            }
+
+            const questionResponse = await axios.get(`${BASE_URL}/api/question`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            });
+            if (questionResponse.data.code === 200) {
+                const filteredQuestions = questionResponse.data.data.filter((q: Question) => q.survey_id === parseInt(surveyId || '', 10));
+                setQuestion(filteredQuestions);
+            } else {
+                console.log('Failed to fetch question data');
+            }
+
+            const answerResponse = await axios.get(`${BASE_URL}/api/answer`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            });
+            if (answerResponse.data.code === 200) {
+                const answers = answerResponse.data.data;
+                const userAnswers = answers.filter((answer: any) => answer.user_id === parseInt(idUser));
+                const surveyAnswers = userAnswers.filter((answer: any) => answer.question.some((q: any) => q.survey_id === parseInt(surveyId || '', 10)));
+
+                if (surveyAnswers.length > 0) {
+                    setHaveAnswered(true);
+                }
+                
+            } else {
+                console.log('Failed to fetch answer data');
             }
         } catch (error) {
             console.log(error);
         }
     };
 
-    const fetchDataQuestion = async () => {
-        try{
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${BASE_URL}/api/question`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-            });
-            if (response.data.code === 200) {
-                const filteredQuestions = response.data.data.filter((q: Question) => q.survey_id === parseInt(surveyId || '', 10));
-                setQuestion(filteredQuestions);
-                console.log(filteredQuestions);
-            } else {
-                console.log('Gagal Mengambil data');
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
-   useEffect(() => {
+
+    useEffect(() => {
         if (surveyId) {  // Ensure the id is available before fetching data
             fetchData();
-            fetchDataQuestion();
         }
     }, [surveyId]);
+
+    // const fetchData = async () => {
+    //     try{
+    //         const token = localStorage.getItem('token');
+    //         const response = await axios.get(`${BASE_URL}/api/survey/${surveyId}`, {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`
+    //             },
+    //         });
+    //         if (response.data.code === 200) {
+    //             setData(response.data.data);
+    //         } else {
+    //             console.log('Gagal Mengambil data');
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
+
+
+    // const fetchDataQuestion = async () => {
+    //     try{
+    //         const token = localStorage.getItem('token');
+    //         const response = await axios.get(`${BASE_URL}/api/question`, {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`
+    //             },
+    //         });
+    //         if (response.data.code === 200) {
+    //             const filteredQuestions = response.data.data.filter((q: Question) => q.survey_id === parseInt(surveyId || '', 10));
+    //             setQuestion(filteredQuestions);
+    //             console.log(filteredQuestions);
+    //         } else {
+    //             console.log('Gagal Mengambil data');
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
+
+//    useEffect(() => {
+//         if (surveyId) {  // Ensure the id is available before fetching data
+//             fetchData();
+//             fetchDataQuestion();
+//         }
+//     }, [surveyId]);
 
     const handleDataChange = (id: any, value: any) => {
         setForm(prevData => ({
@@ -120,74 +179,96 @@ export default function page() {
         }
     }
 
-
-    return (
-        <div className="items-center justify-center flex-1 px-5 md:px-10 py-5 md:py-10 ">
-            <Toaster 
-                position="top-center"
-                toastOptions={{
-                    duration: 1800,
-                    style: {
-                        background: '#fff',
-                        color: '#3D9ADD',
-                    },
-                }}
-            />
-            {data ? (
+    if (haveAnswered === true) {
+        return (
+            <div className="items-center justify-center flex-1 px-5 md:px-10 py-5 md:py-10 ">
+                <Toaster 
+                    position="top-center"
+                    toastOptions={{
+                        duration: 1800,
+                        style: {
+                            background: '#fff',
+                            color: '#3D9ADD',
+                        },
+                    }}
+                />
                 <div className=" md:w-2/3 mx-auto bg-white p-7 md:p-10  rounded-lg mb-3">
-                    <h1 className="text-3xl font-bold text-[#3D9ADD]">{data.title}</h1>
-                    <p className="text-gray-500 mt-1 text-sm md:text-base">Silahkan isi survey sampai dengan selesai dan pastikan anda mengisi dengan benar!!</p>
+                    <p className="text-gray-500 mt-1 text-center text-sm md:text-base">Survey Telah Anda isi</p>
+                </div>
+            </div>
+        );
+    } else {
+        return (
+            <div className="items-center justify-center flex-1 px-5 md:px-10 py-5 md:py-10 ">
+                <Toaster 
+                    position="top-center"
+                    toastOptions={{
+                        duration: 1800,
+                        style: {
+                            background: '#fff',
+                            color: '#3D9ADD',
+                        },
+                    }}
+                />
+                {data ? (
+                    <div className=" md:w-2/3 mx-auto bg-white p-7 md:p-10  rounded-lg mb-3">
+                        <h1 className="text-3xl font-bold text-[#3D9ADD]">{data.title}</h1>
+                        <p className="text-gray-500 mt-1 text-sm md:text-base">Silahkan isi survey sampai dengan selesai dan pastikan anda mengisi dengan benar!!</p>
+                    </div> 
+                ):(
+                    <div className="md:w-2/3 mx-auto bg-white  p-7 md:p-10   rounded-lg mb-3">
+                        <h1 className="text-3xl font-bold text-[#3D9ADD]">Loading....</h1>
+                    </div>
+                )}
+    
+                {question.map((item) => (
+                    <div key={item.id}>
+                        {item.type === 'text' && (
+                            <TextFormSurvey
+                                question={item.question}
+                                id={item.id}
+                                onDataChange={handleDataChange}
+                            />
+                        )}
+                        {item.type === 'long_text' && (
+                            <LongTextFormSurvey
+                                question={item.question}
+                                id={item.id}
+                                onDataChange={handleDataChange}
+                            />
+                        )}
+                        {item.type === 'setuju_choice' && (
+                            <SetujuChoise
+                                question={item.question}
+                                id={item.id}
+                                onDataChange={handleDataChange}
+                            />
+                        )}
+                        {item.type === 'puas_choice' && (
+                            <PuasChoise
+                                question={item.question}
+                                id={item.id}
+                                onDataChange={handleDataChange}
+                            />
+                        )}
+                        {item.type === 'jenis_kelamin' && (
+                            <JenisKelaminChoise
+                                question={item.question}
+                                id={item.id}
+                                onDataChange={handleDataChange}
+                            />
+                        )}
+                    </div>
+                ))}
+                
+                <div className="md:w-2/3 mx-auto bg-white p-5 md:p-7   rounded-lg flex justify-end">
+                    <Button onClick={handleFormSubmit}  type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] md:w-1/5">Submit</Button>
                 </div> 
-            ):(
-                <div className="md:w-2/3 mx-auto bg-white  p-7 md:p-10   rounded-lg mb-3">
-                    <h1 className="text-3xl font-bold text-[#3D9ADD]">Loading....</h1>
-                </div>
-            )}
+            </div>
+        );
+    }
 
-            {question.map((item) => (
-                <div key={item.id}>
-                    {item.type === 'text' && (
-                        <TextFormSurvey
-                            question={item.question}
-                            id={item.id}
-                            onDataChange={handleDataChange}
-                        />
-                    )}
-                    {item.type === 'long_text' && (
-                        <LongTextFormSurvey
-                            question={item.question}
-                            id={item.id}
-                            onDataChange={handleDataChange}
-                        />
-                    )}
-                    {item.type === 'setuju_choice' && (
-                        <SetujuChoise
-                            question={item.question}
-                            id={item.id}
-                            onDataChange={handleDataChange}
-                        />
-                    )}
-                    {item.type === 'puas_choice' && (
-                        <PuasChoise
-                            question={item.question}
-                            id={item.id}
-                            onDataChange={handleDataChange}
-                        />
-                    )}
-                    {item.type === 'jenis_kelamin' && (
-                        <JenisKelaminChoise
-                            question={item.question}
-                            id={item.id}
-                            onDataChange={handleDataChange}
-                        />
-                    )}
-                </div>
-            ))}
-            
-            <div className="md:w-2/3 mx-auto bg-white p-5 md:p-7   rounded-lg flex justify-end">
-                <Button onClick={handleFormSubmit}  type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] md:w-1/5">Submit</Button>
-            </div> 
-        </div>
-    );
+
+
 }
     
