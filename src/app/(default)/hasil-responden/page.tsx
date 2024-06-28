@@ -44,7 +44,7 @@ export default function page() {
     return (
         <div className="items-center justify-center flex-1 px-5 md:px-10">
             <div className="mt-10">
-                <h1 className="text-4xl font-bold text-center">Hasil Responden</h1>
+                <h1 className="text-4xl font-bold text-center">Hasil Survey</h1>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-24">
                 {data.map((item) => (

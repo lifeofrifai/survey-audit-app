@@ -29,8 +29,9 @@ export default function page() {
                 <div className="flex flex-col items-center mx-auto md:w-2/3 my-3">
                     {questions.map((item) => (
                         <Questions
-                            key={item.count}
-                        />
+                            key={item.count} onDataChange={function (question: string, type: string): void {
+                                throw new Error("Function not implemented.");
+                            } }                        />
                     ))}
                     <AddDelete
                         count={questions.length} 

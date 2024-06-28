@@ -46,11 +46,11 @@ return (
                     <SelectValue placeholder="Pilih Jenis Form" />
                 </SelectTrigger>
                 <SelectContent >
-                    <SelectItem value="text">Text</SelectItem>
-                    <SelectItem value="long_text">Long Text</SelectItem>
-                    <SelectItem value="jenis_kelamin">Gender Selection</SelectItem>
-                    <SelectItem value="puas_choice">Kepuasan Choice</SelectItem>
-                    <SelectItem value="setuju_choice">Setuju Choice</SelectItem>
+                    <SelectItem value="text">Text Singkat</SelectItem>
+                    <SelectItem value="long_text">Text Panjang</SelectItem>
+                    <SelectItem value="jenis_kelamin">Jenis Kelamin</SelectItem>
+                    <SelectItem value="puas_choice">Tingkat Kepuasan</SelectItem>
+                    <SelectItem value="setuju_choice">Pilihan</SelectItem>
                 </SelectContent>
             </Select>
         </div>

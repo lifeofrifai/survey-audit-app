@@ -23,7 +23,7 @@ const LongTextFormSurvey = ({
     }
     return (
         <div className="md:w-2/3 mx-auto bg-white p-7 md:p-10   pb-12 rounded-lg my-5">
-            <Label htmlFor={`longTxtFormSurvey${id}`} className="text-md">{question}</Label>
+            <Label htmlFor={`longTxtFormSurvey${id}`} className="text-lg">{question}</Label>
             <Textarea 
                 className="mt-3 h-8"
                 id={`longTxtFormSurvey${id}`}

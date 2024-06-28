@@ -175,7 +175,7 @@ const AnswerChart = ({
                 <h1 className="font-semibold text-md md:text-base">Pertanyaan: </h1>
                 <p className="font-bold text-base md:text-lg ">{question}</p>
             </div>
-            <div className="md:w-1/3">
+            <div className=" md:w-1/5">
                 {type === 'jenis_kelamin' && (
                     <Pie data={chartJenisKelamin} />
                 )}

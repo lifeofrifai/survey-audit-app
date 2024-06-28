@@ -25,7 +25,7 @@ const CardSurvey = ({
                 </div>
                 <div className="mt-5">
                     <Link href={id}>
-                        <Button size={"default"} variant={"default"} className="bg-[#85ED00] hover:bg-[#86ed00ce] w-full text-black" >Lihat Hasil Survey</Button>
+                        <Button size={"default"} variant={"default"} className="bg-white hover:bg-gray-200 w-full text-[#0B62A0]" >Lihat Hasil Survey</Button>
                     </Link>
                 </div>
             </div>
