@@ -87,6 +87,12 @@ export default function page() {
         }
     };
 
+    const currentDate = new Date();
+    const localDate = currentDate.toLocaleDateString();
+
+    console.log(localDate); // Output: MM/DD/YYYY (or another format depending on your locale)
+
+
 
 
     useEffect(() => {
@@ -94,52 +100,6 @@ export default function page() {
             fetchData();
         }
     }, [surveyId]);
-
-    // const fetchData = async () => {
-    //     try{
-    //         const token = localStorage.getItem('token');
-    //         const response = await axios.get(`${BASE_URL}/api/survey/${surveyId}`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             },
-    //         });
-    //         if (response.data.code === 200) {
-    //             setData(response.data.data);
-    //         } else {
-    //             console.log('Gagal Mengambil data');
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
-
-
-    // const fetchDataQuestion = async () => {
-    //     try{
-    //         const token = localStorage.getItem('token');
-    //         const response = await axios.get(`${BASE_URL}/api/question`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             },
-    //         });
-    //         if (response.data.code === 200) {
-    //             const filteredQuestions = response.data.data.filter((q: Question) => q.survey_id === parseInt(surveyId || '', 10));
-    //             setQuestion(filteredQuestions);
-    //             console.log(filteredQuestions);
-    //         } else {
-    //             console.log('Gagal Mengambil data');
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
-
-//    useEffect(() => {
-//         if (surveyId) {  // Ensure the id is available before fetching data
-//             fetchData();
-//             fetchDataQuestion();
-//         }
-//     }, [surveyId]);
 
     const handleDataChange = (id: any, value: any) => {
         setForm(prevData => ({
@@ -181,7 +141,7 @@ export default function page() {
 
     if (haveAnswered === true) {
         return (
-            <div className="items-center justify-center flex-1 px-5 md:px-10 py-5 md:py-10 ">
+            <div className="items-center justify-center flex-1  px-5 md:px-10 py-5 md:py-10 ">
                 <Toaster 
                     position="top-center"
                     toastOptions={{
@@ -192,8 +152,8 @@ export default function page() {
                         },
                     }}
                 />
-                <div className=" md:w-2/3 mx-auto bg-white p-7 md:p-10  rounded-lg mb-3">
-                    <p className="text-gray-500 mt-1 text-center text-sm md:text-base">Survey Telah Anda isi</p>
+                <div className=" md:w-2/3 mx-auto bg-white p-7 md:p-10  rounded-lg h-full items-center justify-center flex">
+                    <p className="text-red-200 mt-1 text-center text-sm md:text-base bg-red-500 p-1">Maaf, Survey Ini Telah Anda isi</p>
                 </div>
             </div>
         );

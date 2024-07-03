@@ -15,6 +15,8 @@ import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import DatePicker  from "@/components/ui/date-picker";
+
 
 
 export default function page() {
@@ -37,7 +39,10 @@ export default function page() {
     const [data, setData] = useState<Survey[]>([]);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState<boolean>(false);
+
     const [title, setTitle] = useState<string>('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     const fetchData = async () => {
         try{
@@ -67,13 +72,23 @@ export default function page() {
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
-    }
+    };
+
+    const handleStartDateChange = (date: string) => {
+        setStartDate(date);
+    };
+
+    const handleEndDateChange = (date: string) => {
+        setEndDate(date);
+    };
 
     const handleNewSurvey = async () => {
         try {
             const token = localStorage.getItem('token');
             const response = axios.post(`${BASE_URL}/api/survey`, {
                 title,
+                tanggal_posting: startDate,
+                batas_posting: endDate
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -95,6 +110,10 @@ export default function page() {
         }
     }
 
+    console.log("Title", title);
+    console.log("Start Date", startDate);
+    console.log("End Date", endDate);
+
 
 
     return (
@@ -112,16 +131,30 @@ export default function page() {
                     <React.Fragment >
                         <Modal open={open} onClose={() => setOpen(false)} sx={{zIndex: 99999}}>
                             <ModalDialog variant="outlined" role="alertdialog" sx={{width: 500}}>
-                                <div className="w-full p-3">
-                                    <Label htmlFor="namaSurvey" className="text-lg font-semibold">Nama Survey</Label>
-                                    <Input 
-                                        type="text" 
-                                        className="w-full mt-1" 
-                                        placeholder="Masukan Nama Survey"
-                                        value={title}
-                                        onChange={handleTitleChange}
-                                    />
+                                <div className="w-full p-3 flex flex-col gap-3">
+                                    <div>
+                                        <Label  className="text-lg font-semibold">Nama Survey</Label>
+                                        <Input 
+                                            type="text" 
+                                            className="w-full mt-1" 
+                                            placeholder="Masukan Nama Survey"
+                                            value={title}
+                                            onChange={handleTitleChange}
+                                            
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label className="text-lg font-semibold ">Tanggal Mulai Survey</Label>
+                                        <DatePicker onSelectDate={handleStartDateChange}/>
+                                    </div>
+                                    <div>
+                                        <Label className="text-lg font-semibold ">Tanggal Berakhir Survey</Label>
+                                        <DatePicker onSelectDate={handleEndDateChange}/>
+                                    </div>
+                                    
+                                    
                                 </div>
+                                
                             <DialogActions>
                                 <Button onClick={handleNewSurvey} variant="default" className="bg-[#00B907] hover:bg-[#43a046]">
                                     <CirclePlus className="mr-2 h-4 w-4"/>

@@ -15,10 +15,12 @@ import { Label } from "@/components/ui/label";
 import BASE_URL from "../../../../config";
 import toast, { Toaster } from 'react-hot-toast';
 import { getCsrfToken } from 'next-auth/react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState(''); 
   const notify = () => toast.error('Email atau Password salah!');
 
   
@@ -29,6 +31,10 @@ export default function Login() {
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+
+  const handleRole = (e: string) => {
+    setRole(e);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -88,6 +94,18 @@ export default function Login() {
           </CardHeader>
           <CardContent>
             <div className="grid w-full max-w-sm items-center gap-1.5">
+              <Select onValueChange={handleRole} value={role} required>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Masuk Sebagai" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="DOSEN">Dosen</SelectItem>
+                  <SelectItem value="MAHASISWA">Mahasiswa</SelectItem>
+                  <SelectItem value="ALUMNI">Alumni</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">
               <Label htmlFor="email" className="text-white">Email</Label>
               <Input 
                 type="email" 
