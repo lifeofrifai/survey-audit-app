@@ -49,6 +49,7 @@ export default function page() {
             });
             if (surveyResponse.data.code === 200) {
                 setData(surveyResponse.data.data);
+                console.log("Data Survey", surveyResponse.data.data);
             } else {
                 console.log('Failed to fetch survey data');
             }
@@ -87,10 +88,17 @@ export default function page() {
         }
     };
 
-    const currentDate = new Date();
-    const localDate = currentDate.toLocaleDateString();
+    const isWithinDateRange = (startDate: string, endDate: string) => {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        const today = new Date();
 
-    console.log(localDate); // Output: MM/DD/YYYY (or another format depending on your locale)
+        return today >= start && today <= end;
+    };
+
+    const canAccessSurvey = data && isWithinDateRange(data.tanggal_posting, data.batas_posting);
+
+    console.log("Status Survey", canAccessSurvey);
 
 
 
@@ -139,10 +147,10 @@ export default function page() {
         }
     }
 
-    if (haveAnswered === true) {
+    if (haveAnswered) {
         return (
             <div className="items-center justify-center flex-1  px-5 md:px-10 py-5 md:py-10 ">
-                <Toaster 
+                <Toaster
                     position="top-center"
                     toastOptions={{
                         duration: 1800,
@@ -152,83 +160,93 @@ export default function page() {
                         },
                     }}
                 />
-                <div className=" md:w-2/3 mx-auto bg-white p-7 md:p-10  rounded-lg h-full items-center justify-center flex">
-                    <p className="text-red-200 mt-1 text-center text-sm md:text-base bg-red-500 p-1">Maaf, Survey Ini Telah Anda isi</p>
+                <div className=" md:w-2/3 mx-auto bg-white p-7 md:py-16 md:p-10 rounded-lg mb-3">
+                    <h1 className="text-2xl font-semibold text-red-400 text-center">Maaf, Survey Ini Telah Anda isi</h1>
+                    <p className="text-gray-500 mt-1 text-center text-sm md:text-base">Terima Kasih Karena Telah Mengisi Survey Ini.</p>
                 </div>
             </div>
         );
-    } else {
+    }
+
+    if (!canAccessSurvey) {
         return (
-            <div className="items-center justify-center flex-1 px-5 md:px-10 py-5 md:py-10 ">
-                <Toaster 
-                    position="top-center"
-                    toastOptions={{
-                        duration: 1800,
-                        style: {
-                            background: '#fff',
-                            color: '#3D9ADD',
-                        },
-                    }}
-                />
-                {data ? (
-                    <div className=" md:w-2/3 mx-auto bg-white p-7 md:p-10  rounded-lg mb-3">
-                        <h1 className="text-3xl font-bold text-[#3D9ADD]">{data.title}</h1>
-                        <p className="text-gray-500 mt-1 text-sm md:text-base">Silahkan isi survey sampai dengan selesai dan pastikan anda mengisi dengan benar!!</p>
-                    </div> 
-                ):(
-                    <div className="md:w-2/3 mx-auto bg-white  p-7 md:p-10   rounded-lg mb-3">
-                        <h1 className="text-3xl font-bold text-[#3D9ADD]">Loading....</h1>
-                    </div>
-                )}
-    
-                {question.map((item) => (
-                    <div key={item.id}>
-                        {item.type === 'text' && (
-                            <TextFormSurvey
-                                question={item.question}
-                                id={item.id}
-                                onDataChange={handleDataChange}
-                            />
-                        )}
-                        {item.type === 'long_text' && (
-                            <LongTextFormSurvey
-                                question={item.question}
-                                id={item.id}
-                                onDataChange={handleDataChange}
-                            />
-                        )}
-                        {item.type === 'setuju_choice' && (
-                            <SetujuChoise
-                                question={item.question}
-                                id={item.id}
-                                onDataChange={handleDataChange}
-                            />
-                        )}
-                        {item.type === 'puas_choice' && (
-                            <PuasChoise
-                                question={item.question}
-                                id={item.id}
-                                onDataChange={handleDataChange}
-                            />
-                        )}
-                        {item.type === 'jenis_kelamin' && (
-                            <JenisKelaminChoise
-                                question={item.question}
-                                id={item.id}
-                                onDataChange={handleDataChange}
-                            />
-                        )}
-                    </div>
-                ))}
-                
-                <div className="md:w-2/3 mx-auto bg-white p-5 md:p-7   rounded-lg flex justify-end">
-                    <Button onClick={handleFormSubmit}  type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] md:w-1/5">Submit</Button>
-                </div> 
+            <div className="items-center justify-center flex-1  px-5 md:px-10 py-5 md:py-10 ">
+                <div className=" md:w-2/3 mx-auto bg-white p-7 md:py-16 md:p-10 rounded-lg mb-3">
+                    <h1 className="text-2xl font-semibold text-red-300 text-center">Maaf, Survey Ini Sudah Tidak Tersedia</h1>
+                    <p className="text-gray-500 mt-1 text-center text-sm md:text-base">Masa Isi Survey Ini Belum Mulai Atau Sudah Lewat</p>
+                </div>
             </div>
         );
     }
 
 
+    return (
+        <div className="items-center justify-center flex-1 px-5 md:px-10 py-5 md:py-10 ">
+            <Toaster 
+                position="top-center"
+                toastOptions={{
+                    duration: 1800,
+                    style: {
+                        background: '#fff',
+                        color: '#3D9ADD',
+                    },
+                }}
+            />
+            {data ? (
+                <div className=" md:w-2/3 mx-auto bg-white p-7 md:p-10  rounded-lg mb-3">
+                    <h1 className="text-3xl font-bold text-[#3D9ADD]">{data.title}</h1>
+                    <p className="text-gray-500 mt-1 text-sm md:text-base">Silahkan isi survey sampai dengan selesai dan pastikan anda mengisi dengan benar!!</p>
+                </div> 
+            ):(
+                <div className="md:w-2/3 mx-auto bg-white  p-7 md:p-10   rounded-lg mb-3">
+                    <h1 className="text-3xl font-bold text-[#3D9ADD]">Loading....</h1>
+                </div>
+            )}
 
+            {question.map((item) => (
+                <div key={item.id}>
+                    {item.type === 'text' && (
+                        <TextFormSurvey
+                            question={item.question}
+                            id={item.id}
+                            onDataChange={handleDataChange}
+                        />
+                    )}
+                    {item.type === 'long_text' && (
+                        <LongTextFormSurvey
+                            question={item.question}
+                            id={item.id}
+                            onDataChange={handleDataChange}
+                        />
+                    )}
+                    {item.type === 'setuju_choice' && (
+                        <SetujuChoise
+                            question={item.question}
+                            id={item.id}
+                            onDataChange={handleDataChange}
+                        />
+                    )}
+                    {item.type === 'puas_choice' && (
+                        <PuasChoise
+                            question={item.question}
+                            id={item.id}
+                            onDataChange={handleDataChange}
+                        />
+                    )}
+                    {item.type === 'jenis_kelamin' && (
+                        <JenisKelaminChoise
+                            question={item.question}
+                            id={item.id}
+                            onDataChange={handleDataChange}
+                        />
+                    )}
+                </div>
+            ))}
+            
+            <div className="md:w-2/3 mx-auto bg-white p-5 md:p-7   rounded-lg flex justify-end">
+                <Button onClick={handleFormSubmit}  type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] md:w-1/5">Submit</Button>
+            </div> 
+        </div>
+    );
 }
     

@@ -3,6 +3,7 @@ import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { CirclePlus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Label } from "../ui/label";
 
 interface Questions {
     onDataChange: (question: string, type: string) => void;
@@ -38,7 +39,8 @@ const Questions = ({
 
 return (
     <div className=" w-full bg-white p-7 md:p-10 rounded-lg my-2">
-        <div className="flex justify-end">
+        <div className="flex justify-between items-center">
+        <Label className="text-base">Masukan Pertanyaan</Label>
             <Select
                 onValueChange={handleTypeChange}
             >

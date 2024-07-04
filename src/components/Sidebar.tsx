@@ -198,7 +198,7 @@ return (
                         <AssignmentTurnedInIcon />
                     </IconButton>
                     <ListItemContent>
-                        <Typography level="title-sm">Hasil Responden</Typography>
+                        <Typography level="title-sm">Hasil Survey</Typography>
                     </ListItemContent>
                     </ListItemButton>
                 </ListItem>

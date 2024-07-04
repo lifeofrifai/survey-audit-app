@@ -12,6 +12,7 @@ export default function Page() {
         id: number;
         title: string;
         question: string;
+        
     }
 
     interface Answer {
@@ -47,48 +48,6 @@ export default function Page() {
         }
     }
 
-
-    // const fetchData = async () => {
-    //     try {
-    //         const idUser = localStorage.getItem('id') ?? "";
-    //         const token = localStorage.getItem('token');
-    //         const response = await axios.get(`${BASE_URL}/api/survey`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             },
-    //         });
-    //         if (response.data.code === 200) {
-    //             let surveys = response.data.data;
-
-    //             // Fetching answers to filter completed surveys
-    //             const answersResponse = await axios.get(`${BASE_URL}/api/answer`, {
-    //                 headers: {
-    //                     Authorization: `Bearer ${token}`
-    //                 },
-    //             });
-
-    //             if (answersResponse.data.code === 200) {
-    //                 const answers: Answer[] = answersResponse.data.data;
-
-    //                 // Filter out surveys completed by the current user
-    //                 const completedSurveyIds = new Set(
-    //                     answers
-    //                         .filter(answer => answer.user_id === parseInt(idUser))
-    //                         .map(answer => answer.question[0].survey_id)
-    //                 );
-
-    //                 surveys = surveys.filter((survey: { id: any; }) => !completedSurveyIds.has(survey.id));
-    //             }
-
-    //             setData(surveys);
-    //             setLoading(false);
-    //         } else {
-    //             console.log('Failed to fetch data');
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
 
     console.log(data);
 

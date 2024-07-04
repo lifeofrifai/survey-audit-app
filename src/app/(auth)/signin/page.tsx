@@ -41,7 +41,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${BASE_URL}/api/loginpublic`, {
+      const response = await axios.post(`${BASE_URL}/api/login`, {
         email,
         password,
       });
