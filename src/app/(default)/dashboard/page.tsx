@@ -16,6 +16,7 @@ import ModalDialog from '@mui/joy/ModalDialog';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import DatePicker  from "@/components/ui/date-picker";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 
@@ -41,6 +42,7 @@ export default function page() {
     const [open, setOpen] = useState<boolean>(false);
 
     const [title, setTitle] = useState<string>('');
+    const [type, setType] = useState<string>('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
@@ -82,13 +84,18 @@ export default function page() {
         setEndDate(date);
     };
 
+    const handleTypeChange = (value: string) => {
+        setType(value);
+    };
+
     const handleNewSurvey = async () => {
         try {
             const token = localStorage.getItem('token');
             const response = axios.post(`${BASE_URL}/api/survey`, {
-                title,
+                title: title,
                 tanggal_posting: startDate,
-                batas_posting: endDate
+                batas_posting: endDate,
+                role: type
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -110,9 +117,10 @@ export default function page() {
         }
     }
 
-    console.log("Title", title);
-    console.log("Start Date", startDate);
-    console.log("End Date", endDate);
+    // console.log("Title", title);
+    // console.log("Start Date", startDate);
+    // console.log("End Date", endDate);
+    // console.log("Type", type);
 
 
 
@@ -142,6 +150,21 @@ export default function page() {
                                             onChange={handleTitleChange}
                                             
                                         />
+                                    </div>
+                                    <div>
+                                        <Label  className="text-lg font-semibold">Masukan Tujuan Survey</Label>
+                                        <Select
+                                            onValueChange={handleTypeChange}
+                                        >
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Pilih Jenis Form" />
+                                            </SelectTrigger>
+                                            <SelectContent >
+                                                <SelectItem value="MAHASISWA">Mahasiswa</SelectItem>
+                                                <SelectItem value="ALUMNI">Alumni</SelectItem>
+                                                <SelectItem value="DOSEN">Dosen</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                     <div>
                                         <Label className="text-lg font-semibold ">Tanggal Mulai Survey</Label>

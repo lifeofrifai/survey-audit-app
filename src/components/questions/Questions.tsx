@@ -43,6 +43,7 @@ return (
         <Label className="text-base">Masukan Pertanyaan</Label>
             <Select
                 onValueChange={handleTypeChange}
+                value={type}
             >
                 <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Pilih Jenis Form" />
@@ -52,7 +53,7 @@ return (
                     <SelectItem value="long_text">Text Panjang</SelectItem>
                     <SelectItem value="jenis_kelamin">Jenis Kelamin</SelectItem>
                     <SelectItem value="puas_choice">Tingkat Kepuasan</SelectItem>
-                    <SelectItem value="setuju_choice">Pilihan</SelectItem>
+                    <SelectItem value="setuju_choice">Pilihan Setuju</SelectItem>
                 </SelectContent>
             </Select>
         </div>

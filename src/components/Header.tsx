@@ -35,8 +35,9 @@ export default function Header() {
         })}
       />
       <IconButton
+        
         onClick={() => toggleSidebar()}
-        variant="outlined"
+        variant="plain"
         color="neutral"
         size="sm"
       >

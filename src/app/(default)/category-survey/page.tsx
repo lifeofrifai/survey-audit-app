@@ -8,38 +8,24 @@ import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
 
 export default function Page() {
 
-    interface Survey {
-        id: number;
-        title: string;
-        question: string;
-        
-    }
-
-    interface Answer {
-        id: number;
-        question_id: number;
-        user_id: number;
-        answer: string;
-        question: any[];
-        user: any[];
-        created_at: string;
-        updated_at: string;
-    }
-
-    const [data, setData] = useState<Survey[]>([]);
+    const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
         try{
             const token = localStorage.getItem('token');
+            const role = localStorage.getItem('user');
             const response = await axios.get(`${BASE_URL}/api/survey`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
             });
             if (response.data.code === 200) {
-            setData(response.data.data);
-            setLoading(false);
+                const filteredData = response.data.data.filter((survey: any) => survey.role === role);
+                console.log("User role", role);
+                setData(filteredData);
+                console.log("Data Survey", filteredData);
+                setLoading(false);;
             } else {
             console.log('Gagal Mengambil data');
             }
@@ -48,8 +34,6 @@ export default function Page() {
         }
     }
 
-
-    console.log(data);
 
     useEffect(() => {
         fetchData();

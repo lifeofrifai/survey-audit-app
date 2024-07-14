@@ -21,7 +21,9 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState(''); 
+  const [roleError, setRoleError] = useState(false);
   const notify = () => toast.error('Email atau Password salah!');
+  const notifyRole = () => toast.error('Role tidak sesuai!');
 
   
 
@@ -35,11 +37,15 @@ export default function Login() {
 
   const handleRole = (e: string) => {
     setRole(e);
+    setRoleError(false);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (!role) {
+      setRoleError(true);
+      return;
+    }
     try {
       const response = await axios.post(`${BASE_URL}/api/login`, {
         email,
@@ -47,20 +53,23 @@ export default function Login() {
       });
 
       if (response.data.code === 200) {
-        localStorage.setItem('token', response.data.data.token);
-        localStorage.setItem('user', response.data.data.role);
-        localStorage.setItem('email', response.data.data.email);
-        localStorage.setItem('name', response.data.data.name);
-        localStorage.setItem('nim', response.data.data.nim);
-        localStorage.setItem('id', response.data.data.id);
+        if (response.data.data.role === role) {
+          localStorage.setItem('token', response.data.data.token);
+          localStorage.setItem('user', response.data.data.role);
+          localStorage.setItem('id', response.data.data.id);
+          localStorage.setItem('email', response.data.data.email);
+          localStorage.setItem('name', response.data.data.name);
+          localStorage.setItem('nim', response.data.data.nim);
 
-
-        
-        const role = localStorage.getItem('user');
-        if (role === 'ADMIN') {
-          window.location.href = '/dashboard';
+          const user = localStorage.getItem('user');
+          if (user === 'ADMIN') {
+            window.location.href = '/dashboard';
+          } else {
+            window.location.href = '/category-survey';
+          }
         } else {
-          window.location.href = '/category-survey';
+          console.log('Login failed');
+          notifyRole();
         }
       } else {
         console.log('Login failed');
@@ -71,8 +80,7 @@ export default function Login() {
       alert('An error occurred during login. Please try again.');
     }
   };
-
-  
+ 
 
   return (
     <main className="absolute inset-0 -z-10 w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] flex h-screen flex-col items-center justify-center md:p-24 px-5">
@@ -96,7 +104,7 @@ export default function Login() {
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Select onValueChange={handleRole} value={role} required>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Masuk Sebagai" />
+                  <SelectValue placeholder="Masuk Sebagai"/>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="DOSEN">Dosen</SelectItem>
@@ -104,6 +112,7 @@ export default function Login() {
                   <SelectItem value="ALUMNI">Alumni</SelectItem>
                 </SelectContent>
               </Select>
+              {roleError && <p className="text-red-700 text-sm">Please select a role.</p>}
             </div>
             <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">
               <Label htmlFor="email" className="text-white">Email</Label>
