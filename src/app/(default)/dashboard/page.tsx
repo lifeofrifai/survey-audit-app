@@ -37,7 +37,7 @@ export default function page() {
         question: string;
     }
 
-    const [data, setData] = useState<Survey[]>([]);
+    const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState<boolean>(false);
 
