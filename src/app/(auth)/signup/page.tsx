@@ -15,6 +15,7 @@ import { useState } from "react";
 import axios from 'axios'
 import BASE_URL from '../../../../config'
 import toast, { Toaster } from 'react-hot-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const RegisterPage: NextPage = () => {
   const [nim, setNim] = useState('');
@@ -22,7 +23,7 @@ const RegisterPage: NextPage = () => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [role, setRole] = useState('USER');
+  const [role, setRole] = useState('');
 
 
   const handleNimChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +44,10 @@ const RegisterPage: NextPage = () => {
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value);
     
+  };
+
+  const handleRole = (e: string) => {
+    setRole(e);
   };
 
   
@@ -133,6 +138,19 @@ const RegisterPage: NextPage = () => {
               onChange={handleNameChange}
               required
             />
+          </div>
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">
+            <Label htmlFor="name" className="text-white">Role </Label>
+            <Select onValueChange={handleRole} value={role} required>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Siapakah Anda?"/>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="DOSEN">Dosen</SelectItem>
+                  <SelectItem value="MAHASISWA">Mahasiswa</SelectItem>
+                  <SelectItem value="ALUMNI">Alumni</SelectItem>
+                </SelectContent>
+              </Select>
           </div>
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">
             <Label htmlFor="password" className="text-white">Password</Label>
