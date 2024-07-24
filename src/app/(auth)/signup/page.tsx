@@ -149,6 +149,7 @@ const RegisterPage: NextPage = () => {
                   <SelectItem value="DOSEN">Dosen</SelectItem>
                   <SelectItem value="MAHASISWA">Mahasiswa</SelectItem>
                   <SelectItem value="ALUMNI">Alumni</SelectItem>
+                  <SelectItem value="PENGGUNA_ALUMNI">Pengguna Alumni</SelectItem>
                 </SelectContent>
               </Select>
           </div>

@@ -111,6 +111,7 @@ export default function Login() {
                   <SelectItem value="MAHASISWA">Mahasiswa</SelectItem>
                   <SelectItem value="ALUMNI">Alumni</SelectItem>
                   <SelectItem value="ADMIN">Admin</SelectItem>
+                  <SelectItem value="PENGGUNA_ALUMNI">Pengguna Alumni</SelectItem>
                 </SelectContent>
               </Select>
               {roleError && <p className="text-red-700 text-sm">Please select a role.</p>}

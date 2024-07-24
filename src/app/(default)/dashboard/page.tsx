@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import DashboardCard from "@/components/DashboardCard";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import axios from "axios";
 import BASE_URL from "../../../../config";
-import { CirclePlus, Trash2 } from "lucide-react"
+import { CirclePlus, Trash2, ListFilter } from "lucide-react";
 import Divider from '@mui/joy/Divider';
 import DialogTitle from '@mui/joy/DialogTitle';
 import DialogContent from '@mui/joy/DialogContent';
@@ -15,13 +15,10 @@ import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import DatePicker  from "@/components/ui/date-picker";
+import DatePicker from "@/components/ui/date-picker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-
-
-export default function page() {
-
+export default function Page() {
     const blockUser = () => {
         const user = localStorage.getItem('user');
         if (user === 'ADMIN') {
@@ -40,37 +37,30 @@ export default function page() {
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState<boolean>(false);
-
     const [title, setTitle] = useState<string>('');
     const [type, setType] = useState<string>('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [year, setYear] = useState<string>('');
 
     const fetchData = async () => {
-        try{
+        try {
             const token = localStorage.getItem('token');
             const response = await axios.get(`${BASE_URL}/api/survey`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
-        });
+            });
             if (response.data.code === 200) {
-            setData(response.data.data);
-            setLoading(false);
+                setData(response.data.data);
+                setLoading(false);
             } else {
-            console.log('Gagal Mengambil data');
+                console.log('Gagal Mengambil data');
             }
         } catch (error) {
             console.log(error);
         }
     }
-
-    console.log(data);
-
-    useEffect(() => {
-        blockUser();
-        fetchData();
-    }, []);
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
@@ -117,12 +107,19 @@ export default function page() {
         }
     }
 
-    // console.log("Title", title);
-    // console.log("Start Date", startDate);
-    // console.log("End Date", endDate);
-    // console.log("Type", type);
+    const handleYearChange = (value: string) => {
+        setYear(value);
+    };
 
+    const filteredData = data.filter((item) => {
+        const surveyYear = new Date(item.tanggal_posting).getFullYear().toString();
+        return year ? surveyYear === year : true;
+    });
 
+    useEffect(() => {
+        blockUser();
+        fetchData();
+    }, []);
 
     return (
         <div className="items-center justify-center flex-1 px-5 md:px-10">
@@ -131,38 +128,56 @@ export default function page() {
             </div>
 
             <div className=" mt-24">
-                <div className="w-30 mb-5 flex flex-row justify-end bg-white p-5 rounded-lg">
+                <div className="w-30 mb-5 flex flex-row justify-between bg-white p-5 rounded-lg">
                     <Button onClick={() => setOpen(true)} type="button" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046]">
                         <CirclePlus className="mr-2 h-4 w-4"/>
                         Create Survey
                     </Button>
-                    <React.Fragment >
+                    <div className="flex items-center">
+                        <Select onValueChange={handleYearChange} value={year}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Filter by Year" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="2022">2022</SelectItem>
+                                <SelectItem value="2023">2023</SelectItem>
+                                <SelectItem value="2024">2024</SelectItem>
+                                <SelectItem value="2025">2025</SelectItem>
+                                <SelectItem value="2026">2026</SelectItem>
+                                <SelectItem value="2027">2027</SelectItem>
+                                <SelectItem value="2028">2028</SelectItem>
+                                <SelectItem value="2029">2029</SelectItem>
+                                <SelectItem value="2030">2030</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <React.Fragment>
                         <Modal open={open} onClose={() => setOpen(false)} sx={{zIndex: 99999}}>
                             <ModalDialog variant="outlined" role="alertdialog" sx={{width: 500}}>
                                 <div className="w-full p-3 flex flex-col gap-3">
                                     <div>
-                                        <Label  className="text-lg font-semibold">Nama Survey</Label>
+                                        <Label className="text-lg font-semibold">Nama Survey</Label>
                                         <Input 
                                             type="text" 
                                             className="w-full mt-1" 
                                             placeholder="Masukan Nama Survey"
                                             value={title}
                                             onChange={handleTitleChange}
-                                            
                                         />
                                     </div>
                                     <div>
-                                        <Label  className="text-lg font-semibold">Masukan Tujuan Survey</Label>
+                                        <Label className="text-lg font-semibold">Masukan Tujuan Survey</Label>
                                         <Select
                                             onValueChange={handleTypeChange}
                                         >
                                             <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Pilih Jenis Form" />
+                                                <SelectValue placeholder="Pilih Tujuan" />
                                             </SelectTrigger>
                                             <SelectContent >
                                                 <SelectItem value="MAHASISWA">Mahasiswa</SelectItem>
                                                 <SelectItem value="ALUMNI">Alumni</SelectItem>
                                                 <SelectItem value="DOSEN">Dosen</SelectItem>
+                                                <SelectItem value="PENGGUNA_ALUMNI">Pengguna Alumni</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -174,16 +189,13 @@ export default function page() {
                                         <Label className="text-lg font-semibold ">Tanggal Berakhir Survey</Label>
                                         <DatePicker onSelectDate={handleEndDateChange}/>
                                     </div>
-                                    
-                                    
                                 </div>
-                                
                             <DialogActions>
                                 <Button onClick={handleNewSurvey} variant="default" className="bg-[#00B907] hover:bg-[#43a046]">
                                     <CirclePlus className="mr-2 h-4 w-4"/>
                                     Buat Survey
                                 </Button>
-                                <Button variant="destructive"  onClick={() => setOpen(false)}>
+                                <Button variant="destructive" onClick={() => setOpen(false)}>
                                     Cancel
                                 </Button>
                             </DialogActions>
@@ -192,16 +204,15 @@ export default function page() {
                     </React.Fragment>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 md:gap-4 bg-white p-5 rounded-lg">
-                    {data.map((item) => (
+                    {filteredData.map((item) => (
                         <DashboardCard
-                                key={item.id}
-                                title={item.title}
-                                id={item.id}
-                            />
+                            key={item.id}
+                            title={item.title}
+                            id={item.id}
+                        />
                     ))}
                 </div>
             </div>
         </div>
     );
 }
-    
