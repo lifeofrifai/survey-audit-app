@@ -31,10 +31,14 @@ export default function Page() {
     interface Survey {
         id: number;
         title: string;
-        question: string;
+        tanggal_posting: string;
+        batas_posting: string;
+        role: string;
+        updated_at: string;
+        created_at: string;
     }
 
-    const [data, setData] = useState<any[]>([]);
+    const [data, setData] = useState<Survey[]>([]);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState<boolean>(false);
     const [title, setTitle] = useState<string>('');
@@ -42,6 +46,7 @@ export default function Page() {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [year, setYear] = useState<string>('');
+    const [years, setYears] = useState<string[]>([]);
 
     const fetchData = async () => {
         try {
@@ -52,8 +57,17 @@ export default function Page() {
                 },
             });
             if (response.data.code === 200) {
-                setData(response.data.data);
+                const surveys = response.data.data;
+                setData(surveys);
                 setLoading(false);
+
+                // Extract years from tanggal_posting
+                const yearsSet = new Set<string>();
+                surveys.forEach((survey: Survey) => {
+                    const postingYear = new Date(survey.tanggal_posting).getFullYear().toString();
+                    yearsSet.add(postingYear);
+                });
+                setYears(Array.from(yearsSet).sort());  // Convert to array and sort
             } else {
                 console.log('Gagal Mengambil data');
             }
@@ -111,10 +125,10 @@ export default function Page() {
         setYear(value);
     };
 
-    const filteredData = data.filter((item) => {
+    const filteredData = year ? data.filter((item) => {
         const surveyYear = new Date(item.tanggal_posting).getFullYear().toString();
-        return year ? surveyYear === year : true;
-    });
+        return surveyYear === year;
+    }) : data;
 
     useEffect(() => {
         blockUser();
@@ -127,7 +141,7 @@ export default function Page() {
                 <h1 className="text-4xl font-bold text-center">Dashboard Admin Survey</h1>
             </div>
 
-            <div className=" mt-24">
+            <div className="mt-24">
                 <div className="w-30 mb-5 flex flex-row justify-between bg-white p-5 rounded-lg">
                     <Button onClick={() => setOpen(true)} type="button" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046]">
                         <CirclePlus className="mr-2 h-4 w-4"/>
@@ -139,15 +153,9 @@ export default function Page() {
                                 <SelectValue placeholder="Filter by Year" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="2022">2022</SelectItem>
-                                <SelectItem value="2023">2023</SelectItem>
-                                <SelectItem value="2024">2024</SelectItem>
-                                <SelectItem value="2025">2025</SelectItem>
-                                <SelectItem value="2026">2026</SelectItem>
-                                <SelectItem value="2027">2027</SelectItem>
-                                <SelectItem value="2028">2028</SelectItem>
-                                <SelectItem value="2029">2029</SelectItem>
-                                <SelectItem value="2030">2030</SelectItem>
+                                {years.map((yearOption) => (
+                                    <SelectItem key={yearOption} value={yearOption}>{yearOption}</SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                     </div>
