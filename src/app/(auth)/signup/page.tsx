@@ -16,6 +16,7 @@ import axios from 'axios'
 import BASE_URL from '../../../../config'
 import toast, { Toaster } from 'react-hot-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Image from 'next/image';
 
 const RegisterPage: NextPage = () => {
   const [nim, setNim] = useState('');
@@ -24,6 +25,7 @@ const RegisterPage: NextPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('');
+  const [label, setLabel] = useState('NIM');
 
 
   const handleNimChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,6 +50,15 @@ const RegisterPage: NextPage = () => {
 
   const handleRole = (e: string) => {
     setRole(e);
+    if (e === 'DOSEN') {
+      setLabel('NIP');
+    } else if (e === 'MAHASISWA') {
+      setLabel('NIM');
+    } else if (e === 'ALUMNI') {
+      setLabel('NIM');
+    } else if (e === 'PENGGUNA_ALUMNI') {
+      setLabel('NIK');
+    }
   };
 
   
@@ -102,19 +113,41 @@ const RegisterPage: NextPage = () => {
 
           }}
       />
-      <Card className="md:px-10 py-14 bg-gradient-to-t from-[#2C78AF] to-[#3D9ADD] ">
+      <Image
+            src="/LOGIN.PNG"
+            alt="BACKGROUND"
+            className="-z-10 absolute w-full h-full"
+            width={2000}
+            height={2000}
+            priority
+        /> 
+      <Card className="md:px-20 py-14 bg-gradient-to-t from-[#2C78AF] to-[#3D9ADD] ">
         <form onSubmit={handleRegister}>
         <CardHeader>
           <CardTitle className="text-white font-bold text-4xl">Register Account</CardTitle>
           <CardDescription className="text-white">Silahkan Register untuk melakukan survey kepuasaan</CardDescription>
         </CardHeader>
         <CardContent className="">
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="nim" className="text-white">NIM</Label>
+          <div className="grid w-full max-w-sm items-center gap-1.5 ">
+            <Label htmlFor="name" className="text-white">Role </Label>
+            <Select onValueChange={handleRole} value={role} required>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Siapakah Anda?"/>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="DOSEN">Dosen</SelectItem>
+                  <SelectItem value="MAHASISWA">Mahasiswa</SelectItem>
+                  <SelectItem value="ALUMNI">Alumni</SelectItem>
+                  <SelectItem value="PENGGUNA_ALUMNI">Pengguna Alumni</SelectItem>
+                </SelectContent>
+              </Select>
+          </div>
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">
+            <Label htmlFor="nim" className="text-white">{label}</Label>
             <Input
               type="text" 
               id="nim" 
-              placeholder="NIM" 
+              placeholder={label}
               onChange={handleNimChange}
               required
             />
@@ -139,20 +172,7 @@ const RegisterPage: NextPage = () => {
               required
             />
           </div>
-          <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">
-            <Label htmlFor="name" className="text-white">Role </Label>
-            <Select onValueChange={handleRole} value={role} required>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Siapakah Anda?"/>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="DOSEN">Dosen</SelectItem>
-                  <SelectItem value="MAHASISWA">Mahasiswa</SelectItem>
-                  <SelectItem value="ALUMNI">Alumni</SelectItem>
-                  <SelectItem value="PENGGUNA_ALUMNI">Pengguna Alumni</SelectItem>
-                </SelectContent>
-              </Select>
-          </div>
+          
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">
             <Label htmlFor="password" className="text-white">Password</Label>
             <Input 
@@ -180,7 +200,6 @@ const RegisterPage: NextPage = () => {
         </CardFooter>
         </form>
       </Card>
-      <p className="text-xs text-gray-400 mt-1" >Copyright 2024</p>
     </main>
   );
 };

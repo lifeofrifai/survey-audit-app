@@ -16,6 +16,7 @@ import BASE_URL from "../../../../config";
 import toast, { Toaster } from 'react-hot-toast';
 import { getCsrfToken } from 'next-auth/react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Image from 'next/image';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -83,7 +84,15 @@ export default function Login() {
  
 
   return (
-    <main className="absolute inset-0 -z-10 w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] flex h-screen flex-col items-center justify-center md:p-24 px-5">
+    <main className="flex min-h-screen w-full flex-col items-center justify-center md:p-24 px-5">
+      <Image
+            src="/LOGIN.PNG"
+            alt="BACKGROUND"
+            className="-z-10 absolute w-full h-full"
+            width={2000}
+            height={2000}
+            priority
+        /> 
       <Toaster 
         position="top-center"
         toastOptions={{
@@ -94,58 +103,85 @@ export default function Login() {
             },
           }}
       />
-      <Card className="md:px-10 py-14 bg-gradient-to-t from-[#2C78AF] to-[#3D9ADD]">
-        <form onSubmit={handleLogin}>
-          <CardHeader>
-            <CardTitle className="text-white font-bold text-4xl">Sign In Survey</CardTitle>
-            <CardDescription className="text-white">Silahkan Masuk untuk melakukan survey kepuasaan</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Select onValueChange={handleRole} value={role} required>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Masuk Sebagai"/>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="DOSEN">Dosen</SelectItem>
-                  <SelectItem value="MAHASISWA">Mahasiswa</SelectItem>
-                  <SelectItem value="ALUMNI">Alumni</SelectItem>
-                  <SelectItem value="ADMIN">Admin</SelectItem>
-                  <SelectItem value="PENGGUNA_ALUMNI">Pengguna Alumni</SelectItem>
-                </SelectContent>
-              </Select>
-              {roleError && <p className="text-red-700 text-sm">Please select a role.</p>}
+      <div className=" grid grid-cols-1 md:grid-cols-2 gap-52 ">
+        <div className=" hidden md:block">
+            <div className=" -ml-3 flex ">
+              <Image
+                  src="/usk-logo.png"
+                  alt="SIMRS BACKGROUND"
+                  width={200}
+                  height={0}
+              /> 
+              <Image
+                  src="/inf-logo.png"
+                  alt="SIMRS BACKGROUND"
+                  width={100}
+                  height={0}
+              /> 
             </div>
-            <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">
-              <Label htmlFor="email" className="text-white">Email</Label>
-              <Input 
-                type="email" 
-                id="email" 
-                placeholder="Email" 
-                value={email} 
-                onChange={handleEmailChange} 
-                required 
-              />
+            <div className="flex flex-col gap-2 text-[#232323] mt-20">
+              <p className="font-extrabold text-8xl">SIAMI</p>
+              <p className="font-bold text-2xl ">Survey Audit Mutu Internal dan Akreditasi</p>
+              <p className="text-lg">Jurusan Informatika Universitas Syiah Kuala</p>
             </div>
-            <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">
-              <Label htmlFor="password" className="text-white">Password</Label>
-              <Input 
-                type="password" 
-                id="password" 
-                placeholder="Password" 
-                value={password} 
-                onChange={handlePasswordChange} 
-                required 
-              />
-            </div>
-          </CardContent>
-          <CardFooter className="justify-center mt-5 flex flex-col">
-            <Button  type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] w-full">Sign In</Button>
-            <p className="text-white text-sm mt-3">Belum punya akun? <a href="/signUp" className="hover:text-[#00B907] font-bold">Register</a></p>
-          </CardFooter>
-        </form>
-      </Card>
-      <p className="text-xs text-gray-400 mt-1">Copyright 2024</p>
+            
+        </div>
+        <Card className="md:px-10 py-10 bg-gradient-to-t from-[#2C78AF] to-[#3D9ADD]">
+          <form onSubmit={handleLogin}>
+            <CardHeader>
+              <CardTitle className="text-white font-bold text-4xl">Sign In SIAMI</CardTitle>
+              <CardDescription className="text-white">Silahkan Masuk untuk melakukan survey kepuasaan</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Select onValueChange={handleRole} value={role} required>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Masuk Sebagai"/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="DOSEN">Dosen</SelectItem>
+                    <SelectItem value="MAHASISWA">Mahasiswa</SelectItem>
+                    <SelectItem value="ALUMNI">Alumni</SelectItem>
+                    <SelectItem value="ADMIN">Admin</SelectItem>
+                    <SelectItem value="PENGGUNA_ALUMNI">Pengguna Alumni</SelectItem>
+                  </SelectContent>
+                </Select>
+                {roleError && <p className="text-red-700 text-sm">Please select a role.</p>}
+              </div>
+              <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">
+                <Label htmlFor="email" className="text-white">Email</Label>
+                <Input 
+                  type="email" 
+                  id="email" 
+                  placeholder="Email" 
+                  value={email} 
+                  onChange={handleEmailChange} 
+                  required
+                />
+              </div>
+              <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">
+                <Label htmlFor="password" className="text-white">Password</Label>
+                <Input 
+                  type="password" 
+                  id="password" 
+                  placeholder="Password" 
+                  value={password} 
+                  onChange={handlePasswordChange} 
+                  required 
+                />
+              </div>
+              <p className="text-white text-sm text-right mt-3 font-medium"><a href="/lupaPassword" className="hover:text-[#00B907] ">Lupa Password?</a></p>
+            </CardContent>
+            <CardFooter className="justify-center mt-5 flex flex-col">
+              <Button  type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] w-full">Sign In</Button>
+              <p className="text-white text-sm mt-3">Belum punya akun? <a href="/signUp" className="hover:text-[#00B907] font-bold">Register</a></p>
+            </CardFooter>
+          </form>
+        </Card>
+      </div>
+
+      
+
     </main>
   );
 }

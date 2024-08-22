@@ -49,16 +49,20 @@ const CardSurvey = ({
         })
     };
 
+    const handleEdit = () => {
+        window.location.href = `/dashboard/editSurvey/${id}`;
+    }
+
     return (
         <div className="bg-[#0B62A0] w-full py-6 px-8 rounded-lg flex flex-row justify-between items-center ">
             <div>
                 <p className="text-white font-semibold text-xl">{title}</p>
             </div>
             <div className="flex flex-col gap-2  ">
-                {/* <Button variant="secondary" size="sm" className="bg-yellow-400">
+                <Button variant="secondary" size="sm" onClick={handleEdit} className="bg-yellow-400">
                     <PenLine className="mr-2 h-4 w-4"/>
                     Edit
-                </Button> */}
+                </Button>
                 <Button variant="destructive" size="sm" onClick={() => setOpen(true)}>
                     <Trash2 className="mr-2 h-4 w-4"/>
                     Delete

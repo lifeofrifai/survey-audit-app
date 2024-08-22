@@ -15,12 +15,21 @@ import {
 
 interface DatePickerProps {
     onSelectDate: (date: string) => void
+    baseDate?: string // New prop for base date
 }
 
 const DatePicker = ({
-    onSelectDate
+    onSelectDate,
+    baseDate, // Accept the base date prop
 }: DatePickerProps) => {
     const [date, setDate] = React.useState<string | null>(null)
+
+    // Effect to update the state when baseDate changes
+    React.useEffect(() => {
+        if (baseDate) {
+            setDate(baseDate)
+        }
+    }, [baseDate])
 
     const handleSelect = (selectedDate: Date | undefined) => {
         if (selectedDate) {
