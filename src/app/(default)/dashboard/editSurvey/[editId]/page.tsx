@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from "@/components/ui/input";
 import DatePicker from "@/components/ui/date-picker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from '@/components/ui/button';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Page = () => {
     const surveyId = usePathname().split('/').pop();
@@ -51,8 +53,8 @@ const Page = () => {
             const token = localStorage.getItem('token');
             const response = await axios.put(`${BASE_URL}/api/question/${question.id}`, {
                 id: question.id,
-                survey_id: question.survey_id,
                 question: question.question,
+                type: question.type,
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -72,26 +74,28 @@ const Page = () => {
     };
 
     const handleSaveChanges = async () => {
-        // try{
-        //     const token = localStorage.getItem('token');
-        //     const response = await axios.put(`${BASE_URL}/api/survey/${surveyId}`, {
-        //         title: title,
-        //         role: typeSurvey,
-        //         tanggal_posting: startDate,
-        //         batas_posting: endDate,
-        //     }, {
-        //         headers: {
-        //             Authorization: `Bearer ${token}`
-        //         },
-        //     });
-        //     if (response.data.code === 200) {
-        //         console.log('Survey berhasil diperbarui');
-        //     } else {
-        //         console.log('Gagal memperbarui survey');
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-        // }
+        try{
+            const token = localStorage.getItem('token');
+            const response = await axios.put(`${BASE_URL}/api/survey/${surveyId}`, {
+                title: title,
+                role: typeSurvey,
+                tanggal_posting: startDate,
+                batas_posting: endDate,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            });
+            if (response.data.code === 200) {
+                console.log('Survey berhasil diperbarui');
+                const notify = () => toast.success('Survey berhasil diperbarui!');
+                notify();
+            } else {
+                console.log('Gagal memperbarui survey');
+            }
+        } catch (error) {
+            console.log(error);
+        }
 
         for (let i = 0; i < questions.length; i++) {
             await updateQuestion(questions[i]);
@@ -148,6 +152,16 @@ const Page = () => {
 
     return (
         <div className='items-center justify-center flex-1 px-5 md:px-10 py-5 md:py-10'>
+            <Toaster 
+                position="top-center"
+                toastOptions={{
+                    duration: 1800,
+                    style: {
+                        background: '#fff',
+                        color: '#3D9ADD',
+                    },
+                }}
+            />
             <div className=" w-3/5 bg-white p-7 md:p-10 rounded-lg my-2 mx-auto flex flex-col gap-3">
                 <h1 className="text-2xl font-bold">Edit Survey</h1>
                 <div className=''>
@@ -186,8 +200,8 @@ const Page = () => {
                     <DatePicker onSelectDate={handleEndDateChange} baseDate={endDate}/>
                 </div>
             </div>
-            <div className=" w-3/5 bg-white p-7 md:p-10 rounded-lg my-2 mx-auto flex flex-col gap-3 mt-10">
-                <h1 className="text-2xl font-bold mb-2">Edit Pertanyaan Survey</h1>
+            <div className=" w-3/5 bg-white p-7 md:p-10 rounded-lg my-2 mx-auto flex flex-col gap-3 mt-5">
+                <h1 className="text-2xl font-bold mb-2">Edit Pertanyaan</h1>
                 {questions.map((question, index) => (
                 <div className='bg-gray-50 p-2 rounded-lg' key={question.id}>
                     <div className="flex justify-end items-center">
@@ -218,14 +232,9 @@ const Page = () => {
                     </div>
                 </div>
                 ))}
-                <div className="flex justify-end mt-5">
-                    <button
-                        onClick={handleSaveChanges}
-                        className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-                    >
-                        Save Changes
-                    </button>
-                </div>
+            </div>
+            <div className="flex justify-end mt-5 w-3/5  mx-auto">
+                <Button onClick={handleSaveChanges}  type="submit" size="default" variant="default" className="bg-[#00B907] hover:bg-[#43a046] md:w-1/5">Submit</Button>
             </div>
         </div>
     );
