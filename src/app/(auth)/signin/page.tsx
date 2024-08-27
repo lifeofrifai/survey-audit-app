@@ -17,19 +17,32 @@ import toast, { Toaster } from 'react-hot-toast';
 import { getCsrfToken } from 'next-auth/react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from 'next/image';
+import { Poppins } from "next/font/google";
+
+
+const poppins400 = Poppins({
+  subsets: ["latin"],
+  weight: "500"
+
+});
 
 export default function Login() {
+  const [nim, setNIM] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState(''); 
   const [roleError, setRoleError] = useState(false);
-  const notify = () => toast.error('Email atau Password salah!');
+  const notify = () => toast.error('Email/NIM atau Password salah!');
   const notifyRole = () => toast.error('Role tidak sesuai!');
 
   
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+  };
+
+  const handleNIMChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNIM(e.target.value);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,6 +62,7 @@ export default function Login() {
     }
     try {
       const response = await axios.post(`${BASE_URL}/api/login`, {
+        nim,
         email,
         password,
       });
@@ -119,10 +133,10 @@ export default function Login() {
                   height={0}
               /> 
             </div>
-            <div className="flex flex-col gap-2 text-[#232323] mt-20">
+            <div className={`flex flex-col gap-2 text-[#232323] mt-20 ${poppins400.className}`}   >
               <p className="font-extrabold text-8xl">SIAMI</p>
-              <p className="font-bold text-2xl ">Survey Audit Mutu Internal dan Akreditasi</p>
-              <p className="text-lg">Jurusan Informatika Universitas Syiah Kuala</p>
+              <p className=" text-4xl ">Survey Audit Mutu Internal <br /> dan Akreditasi</p>
+              <p className="text-lg text-">Jurusan Informatika Universitas Syiah Kuala</p>
             </div>
             
         </div>
@@ -149,14 +163,23 @@ export default function Login() {
                 {roleError && <p className="text-red-700 text-sm">Please select a role.</p>}
               </div>
               <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">
+                <Label htmlFor="nim" className="text-white">NIM</Label>
+                <Input 
+                  type="nim" 
+                  id="nim" 
+                  placeholder="NIM" 
+                  value={nim} 
+                  onChange={handleNIMChange}
+                />
+              </div>
+              <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">
                 <Label htmlFor="email" className="text-white">Email</Label>
                 <Input 
                   type="email" 
                   id="email" 
                   placeholder="Email" 
                   value={email} 
-                  onChange={handleEmailChange} 
-                  required
+                  onChange={handleEmailChange}
                 />
               </div>
               <div className="grid w-full max-w-sm items-center gap-1.5 mt-7">

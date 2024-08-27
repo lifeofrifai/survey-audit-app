@@ -90,6 +90,9 @@ const Page = () => {
                 console.log('Survey berhasil diperbarui');
                 const notify = () => toast.success('Survey berhasil diperbarui!');
                 notify();
+                setTimeout(() => {
+                    window.location.href = '/dashboard';
+                }, 2100);
             } else {
                 console.log('Gagal memperbarui survey');
             }
